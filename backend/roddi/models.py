@@ -1,4 +1,6 @@
 from django.db import models
+import cvxopt
+from cvxopt.glpk import ilp
 
 
 class Comment(models.Model):
@@ -12,27 +14,8 @@ class Comment(models.Model):
     return self.text
 
 
-class ObtainedAsset(models.Model):
-  asset = models.ForeignKey('Asset', on_delete=models.CASCADE)
-  percentage = models.FloatField(default=100)
-
-
-  def _str_(self):
-    return self.asset._str_ + percentage + '%'
-
-
-
-class SingleDistribution(models.Model):
-  user = models.ForeignKey('User', on_delete=models.CASCADE)
-  percentage = models.FloatField(default=100)
-
-
-  def _str_(self):
-    return self.user._str_ + percentage + '%'
-
-
-
 class Asset(models.Model):
+  id = models.IntegerField(default=lambda: Asset.objects.latest('id').id + 1)
   name = models.CharField(max_length=120, default='')
   description = models.TextField(default='')
   image_url = models.CharField(max_length=120, default='')
@@ -41,7 +24,7 @@ class Asset(models.Model):
   to_be_thrown = models.BooleanField(default=False)
   to_be_donated = models.BooleanField(default=False)
   is_processed = models.BooleanField(default=False)
-  distribution = models.ManyToManyField(SingleDistribution)
+  belongs_to = models.ForeignKey('User', on_delete=models.SET_NULL)
   comments = models.ManyToManyField(Comment)
 
 
@@ -51,16 +34,6 @@ class Asset(models.Model):
 
   def comment(self, user, text: str):
     self.comments.create(text=text, submitter=user)
-
-
-  def single_distribute(self, single_distribution: SingleDistribution):
-    self.distribution.add(single_distribution)
-    self.to_be_distributed = True
-
-
-  def full_distribute(self, distribution):
-    self.distribution = distribution
-    self.to_be_distributed = True
 
 
   def donate(self):
@@ -85,8 +58,8 @@ class User(models.Model):
   email = models.EmailField(default='')
   age = models.IntegerField()
   relation_to_dead = models.CharField(max_length=120, default='')
-  wish_list = models.ManyToManyField(Asset)
-  obtained_assets = models.ManyToManyField(ObtainedAsset)
+  wish_list = models.ManyToManyField(Asset, related_name="wish_list")
+  obtained_assets = models.ManyToManyField(Asset)
   latest_login = models.DateTimeField(auto_now_add=True)
   comments = models.ManyToManyField(Comment)
 
@@ -105,6 +78,7 @@ class Estate(models.Model):
   users = models.ManyToManyField(User)
   assets = models.ManyToManyField(Asset)
   approvals = models.ManyToManyField(User, related_name="approvals")
+  is_complete = False
 
 
   def add_user(self, user: User):
@@ -125,10 +99,39 @@ class Estate(models.Model):
 
   def approve(self, user: User):
     self.approvals.add(user)
+    if len(self.approvals) == len(self.users):
+      full_distribution()
 
 
   def full_distribution(self):
-    pass
+    assets = [a for a in self.assets.all() if a.to_be_distributed]
+    asset_ids = [a.id for a in assets]
+    wislists = [[a.id for a in u.wish_list if a.id in asset_ids] for u in self.users.all()]
+    indexed_wishlists = [[asset_ids.index(asset_id) for asset_id in wishlist] for wishlist in wishlists]
+
+    c = np.hstack(indexed_wishlists) - len(assets)
+
+    max_one_user_per_asset = [[1 if (i-j) % len(assets) == 0 else 0 for i in range(len(c))] for j in range(len(assets))]
+    fair_distribution = [[c[i] if len(assets) * j <= i < len(assets) * (j+1) else 0 for i in range(len(c))] for j in range(len(users))]
+    A = np.array(max_one_user_per_asset + fair_distribution)
+
+    max_one_user_per_asset_sum = [1] * len(assets)
+    fair_distribution_sum = [c[:len(assets)].sum() / len(users)] * len(users)
+    b = np.array(max_one_user_per_asset_sum + fair_distribution_sum)
+
+    solution = ilp(c=cvxopt.matrix(c, tc='d'),
+                   G=cvxopt.matrix(A, tc='d'),
+                   h=cvxopt.matrix(b, tc='d'),
+                   B=set(range(len(c))))
+
+    opt = np.array(list(solution[1]))
+
+    for i in range(len(opt)):
+      if opt[i] == 1:
+        self.users.all()[i].obtained_assets.add(assets[i])
+        assets[i].belongs_to = self.users.all()[i]
+    self.is_complete = True
+    
 
 
   def alert_distribution(self):
