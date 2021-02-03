@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator
 import cvxopt
 from cvxopt.glpk import ilp
 
@@ -10,22 +11,27 @@ class Comment(models.Model):
   is_deleted = models.BooleanField(default=False)
   
 
-  def _str_(self):
+  def __str__(self):
     return self.text
 
 
 class Asset(models.Model):
-  id = models.IntegerField(default=lambda: Asset.objects.latest('id').id + 1)
+
+
+  def _get_id():
+    return len(Asset.objects.all())
+
+  id = models.IntegerField(primary_key=True, editable=False, default=_get_id)
   name = models.CharField(max_length=120, default='')
-  description = models.TextField(default='')
-  image_url = models.CharField(max_length=120, default='')
+  description = models.TextField(blank=True, default='')
+  image_url = models.CharField(max_length=120, blank=True, default='')
   category = models.CharField(max_length=120, default='')
   to_be_distributed = models.BooleanField(default=True)
   to_be_thrown = models.BooleanField(default=False)
   to_be_donated = models.BooleanField(default=False)
   is_processed = models.BooleanField(default=False)
-  belongs_to = models.ForeignKey('User', on_delete=models.SET_NULL)
-  comments = models.ManyToManyField(Comment)
+  belongs_to = models.ForeignKey('User', null=True, blank=True, on_delete=models.SET_NULL)
+  comments = models.ManyToManyField(Comment, blank=True)
 
 
   def modify(self, param: str, new_value):
@@ -48,7 +54,7 @@ class Asset(models.Model):
     self.is_processed = True
 
 
-  def _str_(self):
+  def __str__(self):
     return self.name
 
 
@@ -56,28 +62,44 @@ class Asset(models.Model):
 class User(models.Model):
   name = models.CharField(max_length=120, default='')
   email = models.EmailField(default='')
-  age = models.IntegerField()
-  relation_to_dead = models.CharField(max_length=120, default='')
+  age = models.IntegerField(
+    validators=[
+            MaxValueValidator(150),
+            MinValueValidator(18)
+    ]
+  )
+
+  RELATION_CHOICES = [
+    ('sibling', 'Sibling'),
+    ('parent', 'Parent'),
+    ('pibling', 'Uncle/Aunt'),
+    ('grandparent', 'Grandparent'),
+    ('child', 'Child'),
+    ('grandchild', 'Grandchild'),
+    ('other', 'Other')
+  ]
+
+  relation_to_dead = models.CharField(max_length=120, choices=RELATION_CHOICES, default='other')
   wish_list = models.ManyToManyField(Asset, related_name="wish_list")
-  obtained_assets = models.ManyToManyField(Asset)
+  obtained_assets = models.ManyToManyField(Asset, blank=True)
   latest_login = models.DateTimeField(auto_now_add=True)
-  comments = models.ManyToManyField(Comment)
+  comments = models.ManyToManyField(Comment, blank=True)
 
   def modify(param: str, new_value):
     pass
 
 
-  def _str_(self):
+  def __str__(self):
     return self.name
 
 
 class Estate(models.Model):
   name = models.CharField(max_length=120)
-  description = models.TextField(default='')
+  description = models.TextField(blank=True, default='')
   # administrator = models.ForeignKey('User', on_delete=models.SET_NULL)
-  users = models.ManyToManyField(User)
-  assets = models.ManyToManyField(Asset)
-  approvals = models.ManyToManyField(User, related_name="approvals")
+  users = models.ManyToManyField(User, blank=True)
+  assets = models.ManyToManyField(Asset, blank=True)
+  approvals = models.ManyToManyField(User, related_name="approvals", blank=True)
   is_complete = False
 
 
@@ -138,7 +160,7 @@ class Estate(models.Model):
     pass
 
 
-  def _str_(self):
+  def __str__(self):
     return self.name
 
 
