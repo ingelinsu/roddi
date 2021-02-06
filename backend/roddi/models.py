@@ -4,6 +4,17 @@ import cvxopt
 from cvxopt.glpk import ilp
 
 
+RELATION_WEIGHTS = {
+    'child': 1,
+    'parent': 0.8,
+    'sibling': 0.7,
+    'grandchildren': 0.6,
+    'grandparent': 0.4,
+    'pibling': 0.15,
+    'other': 0.1
+}
+
+
 class Comment(models.Model):
   submitter = models.ForeignKey('User', on_delete=models.CASCADE)
   text = models.CharField(max_length=120, default='')
@@ -128,13 +139,15 @@ class Estate(models.Model):
   def full_distribution(self):
     assets = [a for a in self.assets.all() if a.to_be_distributed]
     asset_ids = [a.id for a in assets]
+    relations = [u.relation_to_dead for u in self.users.all()]
     wislists = [[a.id for a in u.wish_list if a.id in asset_ids] for u in self.users.all()]
     indexed_wishlists = [[asset_ids.index(asset_id) for asset_id in wishlist] for wishlist in wishlists]
 
-    c = np.hstack(indexed_wishlists) - len(assets)
+    wish_hstack = np.hstack(indexed_wishlists) - len(assets)
+    c = np.array([wish_hstack[i] * RELATION_WEIGHTS[relations[i//len(assets)]] for i in range(len(wish_hstack))])
 
     max_one_user_per_asset = [[1 if (i-j) % len(assets) == 0 else 0 for i in range(len(c))] for j in range(len(assets))]
-    fair_distribution = [[c[i] if len(assets) * j <= i < len(assets) * (j+1) else 0 for i in range(len(c))] for j in range(len(users))]
+    fair_distribution = [[wish_hstack[i] if len(assets) * j <= i < len(assets) * (j+1) else 0 for i in range(len(wish_hstack))] for j in range(len(users))]
     A = np.array(max_one_user_per_asset + fair_distribution)
 
     max_one_user_per_asset_sum = [1] * len(assets)
