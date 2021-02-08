@@ -5,11 +5,20 @@
 
 ## Backend
 
+### How to create the environment?
+1. Install Anaconda if you haven't before
+2. Open Anaconda prompt
+3. Navigate to the `backend` folder using the `cd` and `dir` commands
+4. Run the following command:
+```
+conda env create -f environment.yml
+```
+
+
 ### How to open the environment?
 
-1. Install Anaconda if you don't have before
-2. Open Anaconda prompt
-3. Run the following command:
+1. Open Anaconda prompt
+2. Run the following command:
 ```
 conda activate roddi
 ```
