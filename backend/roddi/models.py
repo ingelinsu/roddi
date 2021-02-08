@@ -31,6 +31,9 @@ class Asset(models.Model):
 
 
     def _get_id():
+        """
+        Function for generating ids for all new assets
+        """
         return len(Asset.objects.all())
 
     id = models.IntegerField(primary_key=True, editable=False, default=_get_id)
@@ -151,32 +154,55 @@ class Estate(models.Model):
 
 
     def full_distribution(self):
+        """
+        Distribute all assets with to_be_distributed=True
+
+        We define the problem as an integer linear program on the form
+
+            minimize    c*x
+            subject to  G*x <= h
+                        x is binary vector
+        """
+
         assets = [a for a in self.assets.all() if a.to_be_distributed]
         asset_ids = [a.id for a in assets]
         relations = [u.relation_to_dead for u in self.users.all()]
         wishlists = [[a.id for a in u.get_ordered_wishlist() if a.id in asset_ids] for u in self.users.all()]
+
+        # List of numbers representing priorities. [[1, 0, 2], ...] means that the first user wants asset nr 2 the most, then asset nr 1, then asset nr 3
         indexed_wishlists = [[asset_ids.index(asset_id) for asset_id in wishlist] for wishlist in wishlists]
 
+        # One-dimensional list with negative priorities. indexed_wishlists = [[1, 0, 2], ...] would give wish_hstack = [-2, -3, -1, ...]
         wish_hstack = np.hstack(indexed_wishlists) - len(assets)
+
+        # c defines the minimization function. We want to minimize the sum of products on the form negative_asset_priority * relation_weight for every asset-user-pair selected in the final matching
         c = np.array([wish_hstack[i] * RELATION_WEIGHTS[relations[i//len(assets)]] for i in range(len(wish_hstack))])
 
+        # G is a matrix which, when multiplied by x, is less than h. We want the sum of all binary x-values for each asset to be less than one
         max_one_user_per_asset = [[1 if (i-j) % len(assets) == 0 else 0 for i in range(len(c))] for j in range(len(assets))]
-        fair_distribution = [[wish_hstack[i] if len(assets) * j <= i < len(assets) * (j+1) else 0 for i in range(len(wish_hstack))] for j in range(len(self.users.all()))]
-        A = np.array(max_one_user_per_asset + fair_distribution)
-
-        weight_factor = 1 / max(RELATION_WEIGHTS[relation] for relation in relations)
-
         max_one_user_per_asset_sum = [1] * len(assets)
-        fair_distribution_sum = [c[:len(assets)].sum() * RELATION_WEIGHTS[relation] * weight_factor / len(self.users.all()) for relation in relations]
-        b = np.array(max_one_user_per_asset_sum + fair_distribution_sum)
 
+        # We measure the 'satisfaction' a pairing gives to a user as the sum of negative priorities for each asset he/she gets in the distribution. Here, smaller is better
+        # Here, we define a rule saying each user deserves a satisfaction less than the sum of their negative priorities divided by the number of users.
+        # We also multiply with a weight_factor, so that uncles and grandparents deserves less 'satisfaction' than children and siblings, etc.
+        fair_distribution = [[wish_hstack[i] if len(assets) * j <= i < len(assets) * (j+1) else 0 for i in range(len(wish_hstack))] for j in range(len(self.users.all()))]
+        weight_factor = 1 / max(RELATION_WEIGHTS[relation] for relation in relations)
+        fair_distribution_sum = [c[:len(assets)].sum() * RELATION_WEIGHTS[relation] * weight_factor / len(self.users.all()) for relation in relations]
+
+        # Concatenate the requirements to arrays G and h
+        G = np.array(max_one_user_per_asset + fair_distribution)
+        h = np.array(max_one_user_per_asset_sum + fair_distribution_sum)
+
+        # Solve using mixed integer linear programming solver
         solution = ilp(c=cvxopt.matrix(c, tc='d'),
-                                     G=cvxopt.matrix(A, tc='d'),
-                                     h=cvxopt.matrix(b, tc='d'),
+                                     G=cvxopt.matrix(G, tc='d'),
+                                     h=cvxopt.matrix(h, tc='d'),
                                      B=set(range(len(c))))
 
+        # One-dimensional binary solution array. The first len(assets) values indicate which assets belongs to user 1, the next len(assets) indicate which assets belongs to user 2, and so on
         opt = np.array(list(solution[1]))
 
+        # Do the actual distribution based on the opt array
         for i in range(len(opt)):
             if opt[i] == 1:
                 asset_index = i % len(assets)
