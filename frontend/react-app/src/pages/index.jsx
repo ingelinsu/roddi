@@ -10,9 +10,8 @@ const MainPage = () => {
   return (
     <div>
       <h3 id="tittel">Velkommen til nettsiden</h3>
-      <small>Main Page</small>
       <MainContent />
-      {/*<Login />*/}
+      <Login />
     </div>
   );
 

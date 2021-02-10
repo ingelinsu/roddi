@@ -8,7 +8,7 @@ function MainContent() {
     return (
       <main>
       <div>
-        <p>
+        <p id="lorem"> 
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc maximus,
           nulla ut commodo sagittis, sapien dui mattis dui, non pulvinar lorem
           felis nec erat
