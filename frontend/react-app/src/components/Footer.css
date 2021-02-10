@@ -1,0 +1,8 @@
+.footer {
+    height: 200px;
+    width: 100%;
+    padding-top: 50px;
+    margin-top: 25px;
+    background-color: lightslategray;
+    text-align: center;
+}
