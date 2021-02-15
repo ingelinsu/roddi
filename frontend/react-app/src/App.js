@@ -8,8 +8,9 @@ import {
   Redirect
 } from "react-router-dom";
 
-import MainPage from "./pages/index.jsx";
-import LoginPage from "./pages/login.jsx";
+import Main from "./pages/index.jsx";
+import Login from "./pages/login.jsx";
+import Assets from "./pages/eiendeler.jsx";
 
 import Navbar from "./components/Navbar.js";
 import Footer from "./components/Footer.js";
@@ -20,8 +21,9 @@ class App extends Component {
       <div>
         <Navbar />
         <Router>
-          <Route exact path="/" component={MainPage} />
-          <Route exact path="/login" component={LoginPage} />
+          <Route exact path="/" component={Main} />
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/eiendeler" component={Assets} />
         </Router>
         <Footer />
       </div>
