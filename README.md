@@ -2,6 +2,15 @@
 
 ## Frontend
 
+### How to start the react environment?
+1. Install Node.js from: https://nodejs.org/en/
+2. Navigate to the `frontend/react-app` folder using the `cd` and `dir` commands
+3. Run the following commands:
+```
+npm install
+npm start
+```
+Note: If webpage does not open automatically, go to http://localhost:3000
 
 ## Backend
 
