@@ -20,7 +20,13 @@ class AssetsPage extends Component {
     }
 
     mapResponseData() {
-        return this.state.data.map(asset => <Asset key={asset.key} name={asset.name} description={asset.description} />)
+        return this.state.data.map(asset => 
+            <Asset 
+            key={asset.key} 
+            name={asset.name} 
+            description="En veldig kul ting..." 
+            imgUrl="https://royaldesign.no/alvar-aalto-vase-16-cm#/4356"
+            />)
     }
 
 
