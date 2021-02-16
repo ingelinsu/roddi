@@ -27,12 +27,20 @@ class Decisions extends Component {
         //this.changeColor()
     }
 
+    /**
+     * Makes changes when user clicks button
+     * @param {integer 1, 2, 3} decision 
+     */
     handleClick(decision) {
         this.changeState(decision)
         this.changeColor(decision)
-        // send state decision til backend
     }
 
+    /**
+     * Changes the state of this.state.decision
+     * @param {int 1, 2, 3} decision 
+     * @returns nothing
+     */
     changeState(decision) {
         let decisionString = "";
         switch (decision) {
@@ -51,6 +59,10 @@ class Decisions extends Component {
         this.setState({decision: decisionString}, this.sendResponse)
     }
 
+    /**
+     * Changes the color states after which button has been pressed
+     * @param {int 1, 2, 3} decision 
+     */
     changeColor(decision) {
         const defaultColor = "green"
         this.setState({fordeleColor: "green"})
@@ -70,6 +82,9 @@ class Decisions extends Component {
         }
     }
 
+    /**
+     * Sends a update response to the correct asset
+     */
     sendResponse() {
         console.log(this.state.decision)
 
