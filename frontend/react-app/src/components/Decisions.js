@@ -1,71 +1,86 @@
 import React, {Component} from "react";
 import axios from 'axios';
 
+import './Decisions.css'
+
 class Decisions extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            decision: ""
+            decision: "",
+            fordeleColor: "green",
+            donereColor: "green",
+            kasteColor: "green"
         }
+        this.changeColor = this.changeColor.bind(this)
+        this.changeState = this.changeState.bind(this)
+        this.handleClick = this.handleClick.bind(this)
     }
+
+    
 
     componentDidMount() {
         /* axios
         .get("http://localhost:8000/api/assets/")
         .then(response => this.setState({decision: response.data.decision}))
         .catch(err => console.log(err)) */
-        this.changeColor()
+        //this.changeColor()
     }
 
     handleClick(decision) {
-        // this.changeState(decision)
-        this.changeColor(this.state.decision)
+        this.changeState(decision)
+        this.changeColor(decision)
         // send state decision til backend
-        this.sendResponse()
     }
 
     changeState(decision) {
+        let decisionString = "";
         switch (decision) {
             case 1:
-                this.setState({decision: "fordele"})
+                decisionString = "fordele"
                 break;
             case 2:
-                this.setState({decision: "donere"})
+                decisionString = "donere"
                 break;
             case 3:
-                this.setState({decision: "kaste"})
+                decisionString = "kaste"
                 break;
             default:
-            // code block
+                return
         }
+        this.setState({decision: decisionString}, this.sendResponse)
     }
 
-    changeColor() {
-        switch (this.state.decision) {
-            case "fordele":
-                // bytt farge
+    changeColor(decision) {
+        const defaultColor = "green"
+        this.setState({fordeleColor: "green"})
+        this.setState({donereColor: "green"})
+        this.setState({kasteColor: "green"})
+        switch (decision) {
+            case 1:
+                this.setState({fordeleColor: "orange"})
                 break;
-            case "donere":
-                // bytt farge
+            case 2:
+                this.setState({donereColor: "orange"})
                 break;
-            case "kaste":
-                // bytt farge
+            case 3:
+                this.setState({kasteColor: "orange"})
                 break;
             default:
-            // code block
         }
     }
 
     sendResponse() {
+        console.log(this.state.decision)
 
     }
 
     render() {
         return (
             <div className="decisions">
-                <button onClick={this.handleClick(1)}>Fordele</button>
-                <button onClick={this.handleClick(2)}>Donere</button>
-                <button onClick={this.handleClick(3)}>Kaste</button>
+                <button style={{backgroundColor: this.state.fordeleColor}} onClick={(e) => this.handleClick(1)}>Fordele</button>
+                <button style={{backgroundColor: this.state.donereColor}} onClick={(e) => this.handleClick(2)}>Donere</button>
+                <button style={{backgroundColor: this.state.kasteColor}} onClick={(e) => this.handleClick(3)}>Kaste</button>
             </div>
         );
 
