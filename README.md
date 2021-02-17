@@ -2,14 +2,59 @@
 
 ## Frontend
 
+### How to start the react environment?
+1. Install Node.js from: https://nodejs.org/en/
+2. Navigate to the `frontend/react-app` folder using the `cd` and `dir` commands
+3. Run the following commands:
+```
+npm install
+npm start
+```
+Note: If webpage does not open automatically, go to http://localhost:3000
 
 ## Backend
 
+### How to create the environment?
+1. Install Anaconda if you haven't before
+2. Open Anaconda prompt
+3. Navigate to the `backend` folder using the `cd` and `dir` commands
+4. Run the following command:
+```
+conda env create -f environment.yml
+```
+
+### How to create a new environment manually
+This seems to be necessary on Unix-based operatings systems
+because some dependencies in `environment.yml` appears unavailable.
+```sh
+# You can use another name if you like.
+conda create --name roddi
+conda activate roddi
+
+# Later versions of python lacks cvxopt
+conda install python=3.8.5
+
+# These channels contains libraries we need.
+# You can omit this and use the -c flag, but
+# this makes it automatically available.
+conda config --add channels conda-forge
+conda config --add channels anaconda
+
+# Install all the libraries we need.
+conda install django
+conda install django-cors-headers
+conda install djangorestframework
+conda install django-extensions
+conda install cvxopt
+conda install numpy
+```
+
+
+
 ### How to open the environment?
 
-1. Install Anaconda if you don't have before
-2. Open Anaconda prompt
-3. Run the following command:
+1. Open Anaconda prompt
+2. Run the following command:
 ```
 conda activate roddi
 ```
