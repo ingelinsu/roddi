@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-class Dodsbo extends Component {
+class Estate extends Component {
     render() {
         return (
             <div>
@@ -12,4 +12,4 @@ class Dodsbo extends Component {
     }
 }
 
-export default Dodsbo
+export default Estate

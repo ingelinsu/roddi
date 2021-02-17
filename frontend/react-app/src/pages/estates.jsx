@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import axios from 'axios';
 
-import Dodsbo from "../components/Dodsbo.js"
+import Estate from "../components/Estate.js"
 import Asset from "../components/Asset"
 
-class DodsboPage extends Component {
+class EstatePage extends Component {
 
     // constructor(props) {
     //     super(props)
@@ -30,11 +30,11 @@ class DodsboPage extends Component {
         return (
             <div>
                 {/* {this.mapResponseData()} */}
-                <Dodsbo />
+                <Estate />
             </div>
         );
     }
   
 };
 
-export default DodsboPage
+export default EstatePage
