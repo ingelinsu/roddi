@@ -23,6 +23,33 @@ Note: If webpage does not open automatically, go to http://localhost:3000
 conda env create -f environment.yml
 ```
 
+### How to create a new environment manually
+This seems to be necessary on Unix-based operatings systems
+because some dependencies in `environment.yml` appears unavailable.
+```sh
+# You can use another name if you like.
+conda create --name roddi
+conda activate roddi
+
+# Later versions of python lacks cvxopt
+conda install python=3.8.5
+
+# These channels contains libraries we need.
+# You can omit this and use the -c flag, but
+# this makes it automatically available.
+conda config --add channels conda-forge
+conda config --add channels anaconda
+
+# Install all the libraries we need.
+conda install django
+conda install django-cors-headers
+conda install djangorestframework
+conda install django-extensions
+conda install cvxopt
+conda install numpy
+```
+
+
 
 ### How to open the environment?
 
