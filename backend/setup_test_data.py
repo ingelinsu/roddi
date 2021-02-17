@@ -44,13 +44,13 @@ def create_estate(users, assets):
 
 
 def create_wishes(users, assets):
+    priorities_lists = [np.random.permutation(len(assets)) for i in range(len(users))]
     wishes = [
         [
-            Wish.objects.create(user=user, asset=assets[i], priority=priorities[i])
+            Wish.objects.create(user=users[j], asset=assets[i], priority=priorities_lists[j][i])
             for i in range(len(assets))
-            if (priorities := np.random.permutation(len(assets)) + 1) is not None
         ]
-        for user in users
+        for j in range(len(users))
     ]
 
     for wishlist in wishes:
@@ -60,7 +60,7 @@ def create_wishes(users, assets):
 
 
 def main():
-    delete_data()
+    delete_all_data()
     users = create_users()
     assets = create_assets()
     create_estate(users, assets)

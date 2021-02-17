@@ -91,3 +91,26 @@ python manage.py migrate roddi
 python manage.py runserver
 ```
 4. Open http://localhost:8000/ or http://localhost:8000/admin
+
+
+### How to create database dumps
+Open the sqlite client to your database file.
+The command to open the client may differ on Windows.
+```
+sqlite3 db.sqlite3
+```
+
+Create an SQL dump to some file
+```
+sqlite> .output dump.sql
+sqlite> .dump
+```
+Exit by typing `.exit` or using the shortcut Ctrl-D
+Now you have an SQL-script called `dump.sql` in your folder.
+
+
+### How to set up the database from a dump on Unix
+```
+sqlite3 db.sqlite3 < dump.sql
+```
+
