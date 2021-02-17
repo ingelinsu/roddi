@@ -1,5 +1,6 @@
 *.sqlite3
 __pycache__/
+.ipynb_checkpoints/
 
 # This is a file that sometimes appears in macos which should not be commited
 .DS_Store
