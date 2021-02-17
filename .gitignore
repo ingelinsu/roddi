@@ -3,3 +3,6 @@ __pycache__/
 
 # This is a file that sometimes appears in macos which should not be commited
 .DS_Store
+
+# backup file format for vim
+*.swp
