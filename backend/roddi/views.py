@@ -34,5 +34,5 @@ def login(request, email, password):
     if len(matching_users) > 0:
       json_response = {'id': matching_users[0].id}
     else:
-      json_response = {'denied', 'wrong credentials'}
+      json_response = {'denied': 'wrong credentials'}
     return Response(json_response)
