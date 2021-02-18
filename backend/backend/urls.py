@@ -20,6 +20,9 @@ from roddi import views
 
 router = routers.DefaultRouter()
 router.register(r'assets', views.AssetView, 'asset')
+router.register(r'users', views.UserView, 'user')
+router.register(r'estates', views.EstateView, 'estate')
+router.register(r'comments', views.CommentView, 'comment')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
