@@ -25,7 +25,7 @@ class AssetsPage extends Component {
             key={asset.key} 
             name={asset.name} 
             description="En veldig kul ting..." 
-            imgUrl="https://royaldesign.no/alvar-aalto-vase-16-cm#/4356"
+            imgUrl="https://royaldesign.no/images/afcf7f4e-3bde-4791-bc83-c484c078db63"
             />)
     }
 
@@ -33,7 +33,14 @@ class AssetsPage extends Component {
 
     render() {
         return (
-            <div>
+            <div style={{
+            minWidth: 400,
+            maxWidth: 800, 
+            height: "100%", 
+            backgroundColor: "#EDEDED", 
+            margin: "auto", 
+            display: "block", 
+            overflow: "auto"}}>
                 {this.mapResponseData()}
             </div>
         );
