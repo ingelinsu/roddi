@@ -34,17 +34,26 @@ class AssetsPage extends Component {
 
     render() {
         return (
-            <div><div style={{
-            minWidth: 400,
-            maxWidth: 800, 
-            height: "100%", 
-            backgroundColor: "#EDEDED", 
-            margin: "auto", 
-            display: "block", 
-            overflow: "auto"}}>
-                {this.mapResponseData()}
-            </div>
-            <div><Category/></div>
+            <div style={{
+                width: 1000,
+                backgroundColor: "#EDEDED",
+                margin: "auto", 
+                display: "block", 
+                overflow: "auto",
+            }}>
+                <div style={{
+                    width: 800, 
+                    height: "100%",
+                    float: "right"
+                }}>
+                    {this.mapResponseData()}
+                </div>
+                <div style={{
+                    width: 200,
+                    height: "100%"
+                }}>
+                    <Category/>
+                </div>
             </div>
         );
     }
