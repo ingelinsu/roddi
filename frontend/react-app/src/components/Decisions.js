@@ -8,9 +8,9 @@ class Decisions extends Component {
         super(props)
         this.state = {
             decision: "",
-            fordeleColor: "green",
-            donereColor: "green",
-            kasteColor: "green"
+            fordeleColor: "#08B5A0",
+            donereColor: "#08B5A0",
+            kasteColor: "#08B5A0"
         }
         this.changeColor = this.changeColor.bind(this)
         this.changeState = this.changeState.bind(this)
@@ -65,9 +65,9 @@ class Decisions extends Component {
      */
     changeColor(decision) {
         const defaultColor = "green"
-        this.setState({fordeleColor: "green"})
-        this.setState({donereColor: "green"})
-        this.setState({kasteColor: "green"})
+        this.setState({fordeleColor: "#08B5A0"})
+        this.setState({donereColor: "#08B5A0"})
+        this.setState({kasteColor: "#08B5A0"})
         switch (decision) {
             case 1:
                 this.setState({fordeleColor: "orange"})
@@ -87,7 +87,7 @@ class Decisions extends Component {
      */
     sendResponse() {
         console.log(this.state.decision)
-
+        // PUT/POST api/assets/vote/assetid/uid/newvote
     }
 
     render() {
