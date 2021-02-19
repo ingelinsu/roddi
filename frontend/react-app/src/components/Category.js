@@ -6,10 +6,10 @@ function Category(){
     return(
     
         <div class="sidenav">
-        <a href="#about">Interiør</a>
-        <a href="#services">Klær</a>
-        <a href="#clients">Kjøkkenutstyr</a>
-        <a href="#contact">Hageutstyr</a>
+        <a href="#interiør">Interiør</a>
+        <a href="#klær">Klær</a>
+        <a href="#kjøkkenutstyr">Kjøkkenutstyr</a>
+        <a href="#hageutstyr">Hageutstyr</a>
       </div>
     ); 
 }
