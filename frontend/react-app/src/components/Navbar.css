@@ -1,25 +1,27 @@
 nav {
-    width: 100%;
-    height: 50px;
+    width: 1250px;
+    height: 100px;
     position: fixed;
     top: 0;
     background-color: white;
     box-shadow: 0 5px 5px grey;
+    margin-left: 0px;
 }
 
 .logo {
     float: left;
     font-weight: bold;
-    font-size: 35px;
-    color: lightgreen;
-    margin-left: 10px;
+    font-size: 75px;
+    color: rgb(82, 97, 87);
+    margin-left: 20px;
+    margin-top: -5px
 }
 
 .menuToggle
 {
-  display: block;
+  display: block; 
   position: relative;
-  top: 15px;
+  top: 20px;
   left: -20px;
 
   float: right;
@@ -72,7 +74,7 @@ nav {
   margin-bottom: 5px;
   position: relative;
   
-  background: black;
+  background: rgb(189, 189, 189);
   border-radius: 3px;
   
   z-index: 1;

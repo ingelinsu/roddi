@@ -5,7 +5,7 @@ import './Navbar.css'
 const Navbar = () => {
     return (
     <nav role="navigation">
-        <div className="logo">Logo</div>
+        <div className="logo">-R- RØDDI</div>
         <div className="menuToggle">
             <input type="checkbox" />
             
