@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import axios from 'axios';
 
 import Asset from "../components/Asset"
+import Category from "../components/Category"
 
 class AssetsPage extends Component {
 
@@ -33,7 +34,7 @@ class AssetsPage extends Component {
 
     render() {
         return (
-            <div style={{
+            <div><div style={{
             minWidth: 400,
             maxWidth: 800, 
             height: "100%", 
@@ -42,6 +43,8 @@ class AssetsPage extends Component {
             display: "block", 
             overflow: "auto"}}>
                 {this.mapResponseData()}
+            </div>
+            <div><Category/></div>
             </div>
         );
     }
