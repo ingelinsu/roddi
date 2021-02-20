@@ -23,6 +23,8 @@ router.register(r'assets', views.AssetView, 'asset')
 router.register(r'users', views.UserView, 'user')
 router.register(r'estates', views.EstateView, 'estate')
 router.register(r'comments', views.CommentView, 'comment')
+router.register(r'estate-assets', views.EstateAssetsView, 'estate-assets')
+router.register(r'user-estates', views.UserEstatesView, 'user-estates')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
