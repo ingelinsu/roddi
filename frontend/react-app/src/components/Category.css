@@ -5,13 +5,11 @@
   
   .sidenav {
     width: 180px;
-    position: relative;
-    z-index: 1;
-    top: 20px;
-    left: 10px;
     background: rgb(248, 248, 248);
     overflow-x: hidden;
     padding: 8px 0;
+    margin: 20px;
+    height: 300px;
   }
   
   .sidenav a {
