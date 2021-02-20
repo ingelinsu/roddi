@@ -25,8 +25,9 @@ class AssetsPage extends Component {
             <Asset 
             key={asset.key} 
             name={asset.name} 
-            description="En veldig kul ting..." 
-            imgUrl="https://royaldesign.no/images/afcf7f4e-3bde-4791-bc83-c484c078db63"
+            description={asset.description}
+            image_url={asset.image_url}
+            category={asset.category}
             />)
     }
 
