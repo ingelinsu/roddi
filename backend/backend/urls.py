@@ -28,5 +28,6 @@ router.register(r'user-estates', views.UserEstatesView, 'user-estates')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls))
+    path('api/', include(router.urls)),
+    path('api/reprioritize', views.reprioritize_view)
 ]
