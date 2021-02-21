@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import './Estate.css'
+
 
 class Estate extends Component {
     render() {
@@ -15,6 +17,6 @@ class Estate extends Component {
         );
 
     }
-}
+};
 
 export default Estate
