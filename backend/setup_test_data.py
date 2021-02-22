@@ -10,9 +10,9 @@ def delete_all_data():
 
 def create_users():
     users = [
-        User.objects.create(name='Daniel', email='daniefs@stud.ntnu.no', age=20, relation_to_dead='pibling'),
-        User.objects.create(name='Philip', email='philiped@stud.ntnu.no', age=20, relation_to_dead='sibling'),
-        User.objects.create(name='Steffen', email='steffeah@stud.ntnu.no', age=20, relation_to_dead='parent')
+        User.objects.create(name='Daniel', email='daniefs@stud.ntnu.no', password='passord123', age=20, relation_to_dead='pibling'),
+        User.objects.create(name='Philip', email='philiped@stud.ntnu.no', password='passord123', age=20, relation_to_dead='sibling'),
+        User.objects.create(name='Steffen', email='steffeah@stud.ntnu.no', password='passord123', age=20, relation_to_dead='parent')
     ]
 
     for user in users:
@@ -44,13 +44,13 @@ def create_estate(users, assets):
 
 
 def create_wishes(users, assets):
+    priorities_lists = [np.random.permutation(len(assets)) for i in range(len(users))]
     wishes = [
         [
-            Wish.objects.create(user=user, asset=assets[i], priority=priorities[i])
+            Wish.objects.create(user=users[j], asset=assets[i], priority=priorities_lists[j][i])
             for i in range(len(assets))
-            if (priorities := np.random.permutation(len(assets)) + 1) is not None
         ]
-        for user in users
+        for j in range(len(users))
     ]
 
     for wishlist in wishes:
@@ -60,7 +60,7 @@ def create_wishes(users, assets):
 
 
 def main():
-    delete_data()
+    delete_all_data()
     users = create_users()
     assets = create_assets()
     create_estate(users, assets)

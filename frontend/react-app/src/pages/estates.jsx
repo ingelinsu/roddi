@@ -2,6 +2,12 @@ import React, {Component} from 'react';
 import axios from 'axios';
 
 import Estate from "../components/Estate.js"
+<<<<<<< HEAD
+import Asset from "../components/Dødsbo/Asset"
+import HouseIcon from "../components/Dødsbo/HouseIcon"
+
+=======
+>>>>>>> 68102163c86cda3008f90c53a9be5a449b0b2212
 
 class EstatePage extends Component {
 
@@ -26,7 +32,17 @@ class EstatePage extends Component {
     render() {
         return (
             <div>
+<<<<<<< HEAD
+            <div>
+                {/* {this.mapResponseData()} */}
+               {/*   <Estate /> */}
+            </div>
+            <div> 
+                <div><HouseIcon/></div>
+            </div>
+=======
                 {this.mapResponseData()}
+>>>>>>> 68102163c86cda3008f90c53a9be5a449b0b2212
             </div>
         );
     }
