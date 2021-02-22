@@ -18,6 +18,15 @@ class AssetSerializer(serializers.ModelSerializer):
       'comments'
     )
 
+class EstateAssetsSerializer(serializers.ModelSerializer):
+  assets = AssetSerializer(many=True)
+  class Meta:
+    model = Estate
+    fields = (
+      'id',
+      'assets',
+    )
+
 
 class UserSerializer(serializers.ModelSerializer):
   class Meta:
@@ -58,3 +67,11 @@ class CommentSerializer(serializers.ModelSerializer):
       'is_deleted'
     )
 
+class UserEstatesSerializer(serializers.ModelSerializer):
+  estate_set = EstateSerializer(many=True)
+  class Meta:
+    model = User
+    fields = (
+      'id',
+      'estate_set',
+    )
