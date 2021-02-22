@@ -1,6 +1,15 @@
 import React from 'react'
 
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link
+  } from "react-router-dom";
+
 import './Navbar.css'
+
+
 
 const Navbar = () => {
     return (
@@ -14,9 +23,9 @@ const Navbar = () => {
             <span></span>
             
             <ul className="menu">
-                <a href="#"><li>Hjem</li></a>
-                <a href="#"><li>Profil</li></a>
-                <a href="#"><li>Kontakt</li></a>
+                <li><Link to="/">Hjem</Link></li>
+                <li><Link to="/eiendeler">Eiendeler</Link></li>
+                <li><Link to="/">Kontakt</Link></li> 
             </ul>
         </div>
     </nav>
