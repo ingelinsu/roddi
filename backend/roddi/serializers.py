@@ -43,7 +43,7 @@ class EstateSerializer(serializers.ModelSerializer):
       'description',
       'users',
       'assets',
-      'approvals'
+      'approvals',
       'is_complete'
     )
 
