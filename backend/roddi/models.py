@@ -77,6 +77,7 @@ class Asset(models.Model):
 class User(models.Model):
     name = models.CharField(max_length=120, default='')
     email = models.EmailField(default='')
+    password = models.CharField(max_length=120, default='')
     age = models.IntegerField(
         validators=[
                         MaxValueValidator(150),

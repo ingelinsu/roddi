@@ -13,7 +13,9 @@ class AssetSerializer(serializers.ModelSerializer):
       'to_be_distributed',
       'to_be_thrown',
       'to_be_donated',
-      'is_processed'
+      'is_processed',
+      'belongs_to',
+      'comments'
     )
 
 class EstateAssetsSerializer(serializers.ModelSerializer):
@@ -35,7 +37,9 @@ class UserSerializer(serializers.ModelSerializer):
       'email',
       'age',
       'relation_to_dead',
-      'latest_login'
+      'obtained_assets',
+      'latest_login',
+      'comments'
     )
 
 
@@ -46,6 +50,9 @@ class EstateSerializer(serializers.ModelSerializer):
       'id',
       'name',
       'description',
+      'users',
+      'assets',
+      'approvals'
       'is_complete'
     )
 

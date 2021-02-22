@@ -11,6 +11,7 @@ import {
 import Main from "./pages/index.jsx";
 import Login from "./pages/login.jsx";
 import Assets from "./pages/eiendeler.jsx";
+import Estate from "./pages/estates.jsx"
 
 import Navbar from "./components/Navbar.js";
 import Footer from "./components/Footer.js";
@@ -24,6 +25,7 @@ class App extends Component {
           <Route exact path="/" component={Main} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/eiendeler" component={Assets} />
+          <Route exact path="/estates" component={Estate} />
         </Router>
         <Footer />
       </div>
