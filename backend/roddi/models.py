@@ -77,6 +77,7 @@ class Asset(models.Model):
 class User(models.Model):
     name = models.CharField(max_length=120, default='')
     email = models.EmailField(default='')
+    password = models.CharField(max_length=120, default='')
     age = models.IntegerField(
         validators=[
                         MaxValueValidator(150),
@@ -107,18 +108,47 @@ class User(models.Model):
     def __str__(self):
         return self.name
 
+    def reprioritize(self, asset, priority):
+        wishes = Wish.objects.filter(user=self)
+        if asset in self.wish_list.all():
+            asset_wish = wishes.filter(asset=asset)[0]
+            if priority > asset_wish.priority:
+                to_move_up = wishes.filter(priority__gt=asset_wish.priority).filter(priority__lte=priority)
+                for wish in to_move_up:
+                    wish.priority = wish.priority - 1
+                    wish.save()
+            else:
+                to_move_down = wishes.filter(priority__lt=asset_wish.priority).filter(priority__gte=priority)
+                for wish in to_move_down:
+                    wish.priority = wish.priority + 1
+                    wish.save()
+            asset_wish.priority = priority
+        else:
+            to_move_down = wishes.filter(priority__gte=priority)
+            for wish in to_move_down:
+                wish.priority = wish.priority + 1
+                wish.save()
+            asset_wish = Wish.objects.create(user=self, asset=asset, priority=priority)
+        asset_wish.save()
+        self.save()
+        return asset_wish
+
     def get_ordered_wishlist(self):
         return [wish.asset for wish in Wish.objects.filter(user=self).order_by('priority')]
 
 
 class Wish(models.Model):
-        user = models.ForeignKey(User, on_delete=models.CASCADE)
-        asset = models.ForeignKey(Asset, on_delete=models.CASCADE)
-        priority = models.IntegerField(
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    asset = models.ForeignKey(Asset, on_delete=models.CASCADE)
+    priority = models.IntegerField(
         validators=[
                         MinValueValidator(1)
         ]
     )
+
+    
+    def __str__(self):
+        return f'{self.user}: {self.asset} ({self.priority})'
 
 
 class Estate(models.Model):

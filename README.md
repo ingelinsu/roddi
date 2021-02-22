@@ -23,6 +23,33 @@ Note: If webpage does not open automatically, go to http://localhost:3000
 conda env create -f environment.yml
 ```
 
+### How to create a new environment manually
+This seems to be necessary on Unix-based operatings systems
+because some dependencies in `environment.yml` appears unavailable.
+```sh
+# You can use another name if you like.
+conda create --name roddi
+conda activate roddi
+
+# Later versions of python lacks cvxopt
+conda install python=3.8.5
+
+# These channels contains libraries we need.
+# You can omit this and use the -c flag, but
+# this makes it automatically available.
+conda config --add channels conda-forge
+conda config --add channels anaconda
+
+# Install all the libraries we need.
+conda install django
+conda install django-cors-headers
+conda install djangorestframework
+conda install django-extensions
+conda install cvxopt
+conda install numpy
+```
+
+
 
 ### How to open the environment?
 
@@ -64,3 +91,26 @@ python manage.py migrate roddi
 python manage.py runserver
 ```
 4. Open http://localhost:8000/ or http://localhost:8000/admin
+
+
+### How to create database dumps
+Open the sqlite client to your database file.
+The command to open the client may differ on Windows.
+```
+sqlite3 db.sqlite3
+```
+
+Create an SQL dump to some file
+```
+sqlite> .output dump.sql
+sqlite> .dump
+```
+Exit by typing `.exit` or using the shortcut Ctrl-D
+Now you have an SQL-script called `dump.sql` in your folder.
+
+
+### How to set up the database from a dump on Unix
+```
+sqlite3 db.sqlite3 < dump.sql
+```
+
