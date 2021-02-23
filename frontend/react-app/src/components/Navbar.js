@@ -1,4 +1,6 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+
+import {useAuth} from "../context/auth.js";
 
 import {
     BrowserRouter as Router,
@@ -11,7 +13,22 @@ import './Navbar.css'
 
 
 
-const Navbar = () => {
+function Navbar() {
+
+    const { authToken, setAuthToken } = useAuth()
+
+    const logoutStyle = {
+        display: "none"
+    }
+
+    if(authToken) {
+      logoutStyle.display = "block"
+    }
+
+    const logout = () => {
+      setAuthToken();
+    }
+
     return (
     <nav role="navigation">
         <div className="logo">Logo</div>
@@ -25,7 +42,8 @@ const Navbar = () => {
             <ul className="menu">
                 <li><Link to="/">Hjem</Link></li>
                 <li><Link to="/eiendeler">Eiendeler</Link></li>
-                <li><Link to="/">Kontakt</Link></li> 
+                <li><Link to="/">Kontakt</Link></li>
+                <li style={logoutStyle}><a onClick={logout}>Log ut</a></li>
             </ul>
         </div>
     </nav>
