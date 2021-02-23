@@ -20,11 +20,17 @@ import {AuthContext} from "./context/auth.js"
 
 function App() {
 
-  const existingToken = JSON.parse(localStorage.getItem("tokens"));
+  const existingToken = JSON.parse(localStorage.getItem("id"));
   const [authToken, setAuthToken] = useState(existingToken);
   
   const setToken = (data) => {
-    localStorage.setItem("id", data);
+    if(data) {
+      // user login
+      localStorage.setItem("id", data)
+    } else {
+      // user logout
+      localStorage.removeItem("id")
+    }
     setAuthToken(data);
   }
 
