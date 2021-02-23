@@ -9,25 +9,23 @@ function Login() {
   const [isError, setIsError] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { setAuthTokens } = useAuth();
+  const { setAuthToken } = useAuth();
 
   function getLogin() {
-    console.log("HEI")
     axios.get("http://127.0.0.1:8000/api/login/" + email + "&" + password)
     .then(result => {
-      console.log("hei")
-      /* if (result.data == {"denied": "wrong credentials"}) {
-        console.log("FEIL PASSORD")
-        setAuthTokens(result.data);
+      if (Object.keys(result.data)[0] == "id") {
+        // ved innlogging
+        setAuthToken(result.data.id);
         setLoggedIn(true);
+        setIsError(false)
       } else {
-        console.log("Skriver ut id...")
-        console.log(result.data.id)
+        // ved feil passord
         setIsError(true);
-      } */
+      }
 
     }).catch(e => {
-      console.log("ERROR")
+      // feil ved henting av data
       setIsError(true);
     });
   }
@@ -62,6 +60,7 @@ function Login() {
           <button id="knapp" type="button" onClick={() => getLogin()}>Logg inn</button>
         </div>
       </form>
+      { isError ? <h4>Feil brukernavn eller passord!</h4> : <span></span> }
     </div>
       );
   }
