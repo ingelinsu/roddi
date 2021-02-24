@@ -11,6 +11,7 @@ import {
 import Main from "./pages/index.jsx";
 import Login from "./pages/login.jsx";
 import Assets from "./pages/eiendeler.jsx";
+import Estate from "./pages/dodsbo.jsx"
 
 import Navbar from "./components/Navbar.js";
 import Footer from "./components/Footer.js";
@@ -42,7 +43,9 @@ function App() {
         <Navbar />
           <Route exact path="/" component={Main} />
           <Route exact path="/login" component={Login} />
-          <PrivateRoute exact path="/eiendeler" component={Assets} />
+          <Route exact path="/eiendeler" component={Assets} />
+          <Route exact path="/dodsbo" component={Estate} />
+        </Router>
         <Footer />
       </Router>
     </AuthContext.Provider>
