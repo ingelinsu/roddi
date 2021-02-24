@@ -62,7 +62,7 @@ class Asset(models.Model):
 
 
     def throw_out(self):
-        self.to_be_thrown_out = True
+        self.to_be_thrown = True
 
 
     def process(self):
@@ -174,7 +174,7 @@ class Estate(models.Model):
 
 
     def remove_asset(self, asset: Asset):
-        self.assets.remove(user)
+        self.assets.remove(asset)
 
 
     def approve(self, user: User):
@@ -240,6 +240,10 @@ class Estate(models.Model):
                 self.users.all()[user_index].obtained_assets.add(assets[asset_index])
                 assets[asset_index].belongs_to = self.users.all()[user_index]
                 assets[asset_index].save()
+
+        for asset in assets:
+            asset.process()
+            print(asset.is_processed) 
         self.is_complete = True
         
 
