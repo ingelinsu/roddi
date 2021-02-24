@@ -1,5 +1,5 @@
 import './App.css';
-import React, {Component} from 'react'
+import React, {useState} from 'react'
 import {
   BrowserRouter as Router,
   Route,
@@ -15,20 +15,41 @@ import Assets from "./pages/eiendeler.jsx";
 import Navbar from "./components/Navbar.js";
 import Footer from "./components/Footer.js";
 
-class App extends Component {
-  render() {
-    return (
-      <div>
+import PrivateRoute from "./components/PrivateRoute.js"
+import {AuthContext} from "./context/auth.js"
+
+function App() {
+
+  const existingToken = JSON.parse(localStorage.getItem("id"));
+  const [authToken, setAuthToken] = useState(existingToken);
+  
+  const setToken = (data) => {
+    if(data) {
+      // user login
+      localStorage.setItem("id", data)
+    } else {
+      // user logout
+      localStorage.removeItem("id")
+    }
+    setAuthToken(data);
+  }
+
+  return (
+  <div>
+
+    <AuthContext.Provider value={{ authToken, setAuthToken: setToken }}>
+      <Router>
         <Navbar />
-        <Router>
           <Route exact path="/" component={Main} />
           <Route exact path="/login" component={Login} />
-          <Route exact path="/eiendeler" component={Assets} />
-        </Router>
+          <PrivateRoute exact path="/eiendeler" component={Assets} />
         <Footer />
-      </div>
-    );
+      </Router>
+    </AuthContext.Provider>
+
+  </div>
+  );
   }
-}
+
 
 export default App;
