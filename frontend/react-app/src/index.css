@@ -1,5 +1,5 @@
 body {
-  margin: 50px 0 0 0;
+  margin: 85px 0 0 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
@@ -13,7 +13,7 @@ code {
 }
 
 #hus {
-  width: 800px;
+  
   height: 600px;
   margin-left: 0px;
 }
@@ -47,7 +47,7 @@ code {
   
   background:  #b3c5b9;
   
-  width: 430px;
+
   height: 596px;
   margin-left: 800px;
   margin-top: -604px;
