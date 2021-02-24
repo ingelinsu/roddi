@@ -75,6 +75,17 @@ TEMPLATES = [
 WSGI_APPLICATION = 'backend.wsgi.application'
 
 
+#Custom return type for all api functions
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [],
+    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.AllowAny']
+}
+
+
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 

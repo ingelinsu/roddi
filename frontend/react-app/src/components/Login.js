@@ -1,24 +1,67 @@
-import React from 'react';
+import React, { useState } from 'react';
 
+import {useAuth} from '../context/auth.js'
+
+import axios from 'axios'
 
 function Login() {
+  const [isLoggedIn, setLoggedIn] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { setAuthToken } = useAuth();
+
+  function getLogin() {
+    axios.get("http://127.0.0.1:8000/api/login/" + email + "&" + password)
+    .then(result => {
+      if (Object.keys(result.data)[0] == "id") {
+        // ved innlogging
+        setAuthToken(result.data.id);
+        setLoggedIn(true);
+        setIsError(false)
+      } else {
+        // ved feil passord
+        setIsError(true);
+      }
+
+    }).catch(e => {
+      // feil ved henting av data
+      setIsError(true);
+    });
+  }
+
     return (
       <div className="login-wrapper">
       <h4>Logg inn:</h4>
       <form>
         <label>
-          <p>Username</p>
-          <input type="text" />
+          <p>Brukernavn</p>
+          <input 
+          type="email" 
+          value={email}
+          onChange={e => {
+            setEmail(e.target.value);
+          }}
+          placeholder="e-post"
+          />
         </label>
       
         <label>
-          <p>Password</p>
-          <input type="password" />
+          <p>Passord</p>
+          <input 
+          type="password" 
+          value={password}
+          onChange={e => {
+            setPassword(e.target.value);
+          }}
+          placeholder="passord"
+          />
         </label>
         <div>
-          <button id="knapp" type="submit">Submit</button>
+          <button id="knapp" type="button" onClick={() => getLogin()}>Logg inn</button>
         </div>
       </form>
+      { isError ? <h4>Feil brukernavn eller passord!</h4> : <span></span> }
     </div>
       );
   }

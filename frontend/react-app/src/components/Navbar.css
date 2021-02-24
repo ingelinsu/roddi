@@ -17,6 +17,10 @@ nav {
     margin-top: -5px
 }
 
+li .logout:hover {
+    color: tomato;
+}
+
 .menuToggle
 {
   display: block; 
@@ -43,6 +47,7 @@ nav {
 .menuToggle a:hover
 {
   color: tomato;
+  cursor: pointer;
 }
 
 

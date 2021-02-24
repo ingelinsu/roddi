@@ -1,0 +1,16 @@
+button {
+    border: none;
+    color: white;
+    padding: 5px 20px 5px 20px;
+    font-size: large;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+button:first-of-type {
+    margin: 0;
+}
+
+button:hover {
+    color: lightgrey;
+}
