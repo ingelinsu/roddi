@@ -3,6 +3,13 @@ import React, { useState } from 'react';
 import {useAuth} from '../context/auth.js'
 
 import axios from 'axios'
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  Link,
+  Redirect
+} from "react-router-dom";
 
 function Login() {
   const [isLoggedIn, setLoggedIn] = useState(false);
@@ -18,7 +25,6 @@ function Login() {
         // ved innlogging
         setAuthToken(result.data.id);
         setLoggedIn(true);
-        setIsError(false)
       } else {
         // ved feil passord
         setIsError(true);
@@ -28,6 +34,10 @@ function Login() {
       // feil ved henting av data
       setIsError(true);
     });
+  }
+
+  if (isLoggedIn) {
+    return <Redirect to="/dodsbo" />;
   }
 
     return (
