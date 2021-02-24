@@ -30,4 +30,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
     path('api/reprioritize', views.reprioritize_view)
+    path('api/login/<str:email>&<str:password>', views.login)
 ]
