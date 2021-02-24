@@ -43,9 +43,8 @@ function App() {
         <Navbar />
           <Route exact path="/" component={Main} />
           <Route exact path="/login" component={Login} />
-          <Route exact path="/eiendeler" component={Assets} />
-          <Route exact path="/dodsbo" component={Estate} />
-        </Router>
+          <PrivateRoute exact path="/eiendeler" component={Assets} />
+          <PrivateRoute exact path="/dodsbo" component={Estate} />
         <Footer />
       </Router>
     </AuthContext.Provider>
