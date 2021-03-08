@@ -47,6 +47,7 @@ class Asset(models.Model):
     is_processed = models.BooleanField(default=False)
     belongs_to = models.ForeignKey('User', null=True, blank=True, on_delete=models.SET_NULL)
     comments = models.ManyToManyField(Comment, blank=True)
+    votes = {'distribute': [], 'throw': [], 'donate': []}
 
 
     def modify(self, param: str, new_value):
@@ -55,6 +56,33 @@ class Asset(models.Model):
 
     def comment(self, user, text: str):
         self.comments.create(text=text, submitter=user)
+
+    def vote(self, user, vote):
+        '''
+        Add or change vote on action for asset. vote should be 'withdraw' if the user want to withdraw his/her vote
+        '''
+        if vote not in self.votes.keys() and vote != 'withdraw':
+            return None
+
+        for option in self.votes.keys():
+            if user.id in self.votes[option]:
+                self.votes[option].remove(user.id)
+        if vote != 'withdraw':
+            self.votes[vote].append(user.id)
+
+        self.to_be_distributed = False
+        self.to_be_donated = False
+        self.to_be_thrown = False
+
+        # Set to_be_distributed=True if anyone voted distribute, or if there are no votes
+        if (len(self.votes['distribute']) > 0) or (len(self.votes['donate']) + len(self.votes['throw']) == 0): 
+            self.to_be_distributed = True
+
+        # Settle between donate and throw using majority. A tie results in donation, no votes results in throwing away
+        elif len(self.votes['donate']) >= len(self.votes['throw']):
+            self.to_be_donated = True
+        else:
+            self.to_be_thrown = True
 
 
     def donate(self):
