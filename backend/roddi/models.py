@@ -17,6 +17,15 @@ RELATION_WEIGHTS = {
     
 
 class Comment(models.Model):
+
+
+    def _get_id():
+        """
+        Function for generating ids for all new comments
+        """
+        return len(Comment.objects.all())
+
+    id = models.IntegerField(primary_key=True, editable=False, default=_get_id)
     submitter = models.ForeignKey('User', on_delete=models.CASCADE)
     text = models.CharField(max_length=120, default='')
     timestamp = models.DateTimeField(auto_now_add=True)
@@ -61,6 +70,7 @@ class Asset(models.Model):
         '''
         Add or change vote on action for asset. vote should be 'withdraw' if the user want to withdraw his/her vote
         '''
+
         if vote not in self.votes.keys() and vote != 'withdraw':
             return None
 
@@ -103,6 +113,15 @@ class Asset(models.Model):
 
 
 class User(models.Model):
+
+
+    def _get_id():
+        """
+        Function for generating ids for all new users
+        """
+        return len(User.objects.all())
+
+    id = models.IntegerField(primary_key=True, editable=False, default=_get_id)
     name = models.CharField(max_length=120, default='')
     email = models.EmailField(default='')
     password = models.CharField(max_length=120, default='')
@@ -180,6 +199,15 @@ class Wish(models.Model):
 
 
 class Estate(models.Model):
+
+
+    def _get_id():
+        """
+        Function for generating ids for all new estates
+        """
+        return len(Estate.objects.all())
+
+    id = models.IntegerField(primary_key=True, editable=False, default=_get_id)
     name = models.CharField(max_length=120)
     description = models.TextField(blank=True, default='')
     # administrator = models.ForeignKey('User', on_delete=models.SET_NULL)
@@ -281,5 +309,3 @@ class Estate(models.Model):
 
     def __str__(self):
         return self.name
-
-
