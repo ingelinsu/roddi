@@ -1,0 +1,31 @@
+.estate {
+    background-color: rgb(135, 172, 135);
+    margin: 20px 20px;
+    overflow: auto;
+    height: 100%;
+    padding:10px;
+}
+.estate:hover {
+    background-color: rgb(58, 139, 62);
+  }
+
+.estateName {
+    text-decoration: none;
+    margin: 0;
+    font-size: x-large;
+    font-weight: bold;
+}
+
+.estateImage {
+    height:300px;
+    width:fit-content;
+    height: fit-content;
+    float: left;
+    margin-right: 20px;
+
+}
+
+a {
+    text-decoration: none;
+    color: #232323;
+}

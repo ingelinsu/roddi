@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import axios from 'axios';
 
 import Asset from "../components/Asset"
+import Category from "../components/Category"
 
 class AssetsPage extends Component {
 
@@ -20,15 +21,40 @@ class AssetsPage extends Component {
     }
 
     mapResponseData() {
-        return this.state.data.map(asset => <Asset key={asset.key} name={asset.name} description={asset.description} />)
+        return this.state.data.map(asset => 
+            <Asset 
+            key={asset.key} 
+            name={asset.name} 
+            description={asset.description}
+            image_url={asset.image_url}
+            category={asset.category}
+            />)
     }
 
 
 
     render() {
         return (
-            <div>
-                {this.mapResponseData()}
+            <div style={{
+                width: 1000,
+                backgroundColor: "#EDEDED",
+                margin: "auto", 
+                display: "block", 
+                overflow: "auto",
+            }}>
+                <div style={{
+                    width: 800, 
+                    height: "100%",
+                    float: "right"
+                }}>
+                    {this.mapResponseData()}
+                </div>
+                <div style={{
+                    width: 200,
+                    height: "100%"
+                }}>
+                    <Category/>
+                </div>
             </div>
         );
     }

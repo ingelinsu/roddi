@@ -6,8 +6,14 @@ class EstateAdmin(admin.ModelAdmin):
 
 
 class AssetAdmin(admin.ModelAdmin):
-  list_display = ('name', 'description', 'image_url', 'category')
-
+  list_display = ('name',
+                  'to_be_distributed',
+                  'to_be_thrown',
+                  'to_be_donated',
+                  'is_processed',
+                  'description',
+                  'image_url',
+                  'category')
 
 class UserAdmin(admin.ModelAdmin):
   list_display = ('name', 'email', 'password', 'age', 'relation_to_dead')
