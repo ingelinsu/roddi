@@ -114,3 +114,15 @@ Now you have an SQL-script called `dump.sql` in your folder.
 sqlite3 db.sqlite3 < dump.sql
 ```
 
+### How to run tests ###
+
+Tests can be run wherever in the directory as long as it's a parent of the test directory
+
+After activating the enviroment in Anaconda run this simple command (does not work in powershell prompt)
+
+```
+manage.py test
+```
+
+Use "CTRL-C" to end testing gracefully (Gives it time to show errors as well as delete the test database)
+

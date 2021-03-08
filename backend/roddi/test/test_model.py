@@ -2,6 +2,8 @@ from django.test import TestCase
 from roddi.models import *
 from roddi.test import setup_test_data
 
+#Tests methods in the model page of the project with a test database
+
 class TestModels(TestCase):
 
     def setUp(self):
@@ -39,9 +41,9 @@ class TestModels(TestCase):
         steffen_assets = steffen.obtained_assets.all()
 
         self.assertGreater(2,len(daniel_assets)) 
-        self.assertGreater(4,len(steffen_assets))
-        #self.assertEqual(daniel_assets[0].to_be_distributed, False)
-        #self.assertEqual(daniel_assets[0].is_processed, True)
+        self.assertGreater(5,len(steffen_assets))
+        self.assertEqual(daniel_assets[0].to_be_distributed, False)
+        self.assertEqual(daniel_assets[0].is_processed, True)
 
     def test_donate_asset(self):
         vase = Asset.objects.all()[0]
@@ -52,6 +54,8 @@ class TestModels(TestCase):
         vase = Asset.objects.all()[0]
         vase.throw_out()
         self.assertEqual(vase.to_be_thrown, True)
+    
+    
         
 
 

@@ -239,11 +239,10 @@ class Estate(models.Model):
                 user_index = i // len(assets)
                 self.users.all()[user_index].obtained_assets.add(assets[asset_index])
                 assets[asset_index].belongs_to = self.users.all()[user_index]
+                assets[asset_index].process()
+                assets[asset_index].to_be_distributed = False
                 assets[asset_index].save()
 
-        for asset in assets:
-            asset.process()
-            print(asset.is_processed) 
         self.is_complete = True
         
 
