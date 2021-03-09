@@ -21,7 +21,7 @@ function EstatePage() {
     }, [])
 
     function mapResponseData() {
-        return data.map(estate => <Estate key={estate.key} name={estate.name} description={estate.description} />)
+        return data.map(estate => <Estate key={estate.id} id={estate.id} name={estate.name} description={estate.description} />)
     }
 
     return (
