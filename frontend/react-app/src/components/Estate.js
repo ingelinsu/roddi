@@ -13,7 +13,10 @@ import {
 class Estate extends Component {
     render() {
         return (
-            <Link to="/eiendeler" className="assetLink">
+            <Link to={{
+                pathname: "/eiendeler",
+                state: {assetsKey: this.props.id}
+            }} className="assetLink">
             <div className="estate">
                 <div className="estateImage">
                     <img src= {home_icon}  /*{this.props.image_url}*/ style={{height:150, width:150}} />
