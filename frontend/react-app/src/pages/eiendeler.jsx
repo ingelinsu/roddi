@@ -15,15 +15,15 @@ class AssetsPage extends Component {
 
     componentDidMount() {
         axios
-        .get("http://localhost:8000/api/assets/")
-        .then(response => this.setState({data: response.data}))
+        .get("http://localhost:8000/api/estate-assets/" + this.props.location.state.assetsKey)
+        .then(response => this.setState({data: response.data.assets}))
         .catch(err => console.log(err))
     }
 
     mapResponseData() {
         return this.state.data.map(asset => 
             <Asset 
-            key={asset.key} 
+            key={asset.id} 
             name={asset.name} 
             description={asset.description}
             image_url={asset.image_url}
