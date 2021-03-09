@@ -39,7 +39,7 @@ class CommentView(viewsets.ModelViewSet):
 
 
 @api_view(['GET'])
-def login(request, email, password):
+def login_view(request, email, password):
     users = User.objects.all()
     matching_users = [u for u in users if u.email==email and u.password==password]
     if len(matching_users) > 0:
@@ -70,3 +70,17 @@ def reprioritize_view(request):
     return HttpResponse(status=204) # no content (apparently this is convention)
   else:
     return HttpResponse(status=405) # method not allowed
+
+
+def vote_view(request, user_id, asset_id, vote):
+  if User.objects.filter(id=user_id).exists():
+    user = User.objects.get(id=user_id)
+  else:
+    return HttpResponse('User ID not valid', status=400) # bad request
+  if Asset.objects.filter(id=asset_id).exists():
+    asset = Asset.objects.get(id=asset_id)
+  else:
+    return HttpResponse('Asset ID not valid', status=400) # bad request
+
+  asset.vote(user, vote)
+  return HttpResponse(status=204) # no content
