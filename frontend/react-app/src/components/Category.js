@@ -5,7 +5,7 @@ import './Category.css'
 function Category(){
     return(
     
-        <div class="sidenav">
+        <div className="sidenav">
         <a href="#interiør">Interiør</a>
         <a href="#klær">Klær</a>
         <a href="#kjøkkenutstyr">Kjøkkenutstyr</a>
