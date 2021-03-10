@@ -84,3 +84,8 @@ def vote_view(request, user_id, asset_id, vote):
 
   asset.vote(user, vote)
   return HttpResponse(status=204) # no content
+
+def register_view(request, name, pw, age):
+    user = User(name=name, password=pw, age=age)
+    user.save()
+    return HttpResponse(status=204) # no content
