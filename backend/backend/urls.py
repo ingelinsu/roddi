@@ -30,7 +30,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
     path('api/vote/<int:user_id>&<int:asset_id>&<str:vote>', views.vote_view, name='vote'),
-    path('api/reprioritize', views.reprioritize_view),
+    path('api/reprioritize/<int:user_id>&<int:asset_id>&<new_prio>', views.reprioritize_view),
     path('api/login/<str:email>&<str:password>', views.login_view, name='login'),
-    path('api/register/<str:name>&<str:pw>&<int:age>', views.register_view, name='register'),
+    path('api/register/<str:name>&<str:pw>&<int:age>&<str:email>', views.register_view, name='register'),
 ]
