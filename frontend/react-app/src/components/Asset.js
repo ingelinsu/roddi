@@ -19,7 +19,7 @@ class Asset extends Component {
                 </div>
 
                 <div className="buttons">
-                    <Decisions />
+                    <Decisions assetId={this.props.id}/>
                 </div>
             </div>
         );
