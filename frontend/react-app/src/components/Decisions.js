@@ -1,39 +1,54 @@
-import React, {Component} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import axios from 'axios';
+
+import {useAuth} from '../context/auth.js'
 
 import './Decisions.css'
 
-class Decisions extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            decision: "",
-            fordeleColor: "#08B5A0",
-            donereColor: "#08B5A0",
-            kasteColor: "#08B5A0"
+function Decisions() {
+
+    const [decision, setDecision] = useState("")
+    const [fordeleColor, setFordeleColor] = useState("#08B5A0")
+    const [donereColor, setDonereColor] = useState("#08B5A0")
+    const [kasteColor, setKasteColor] = useState("#08B5A0")
+
+    const { authToken } = useAuth()
+
+    const prevDecision = usePrevious(decision)
+
+    useEffect(() => {
+        if(prevDecision !== undefined) {
+            sendResponse()
         }
-        this.changeColor = this.changeColor.bind(this)
-        this.changeState = this.changeState.bind(this)
-        this.handleClick = this.handleClick.bind(this)
+    }, [decision])
+
+    function usePrevious(value) {
+        const ref = useRef();
+        useEffect(() => {
+          ref.current = value;
+        });
+        return ref.current;
     }
 
-    
-
-    componentDidMount() {
-        /* axios
+    /*componentDidMount() {
+        axios
         .get("http://localhost:8000/api/assets/")
         .then(response => this.setState({decision: response.data.decision}))
-        .catch(err => console.log(err)) */
+        .catch(err => console.log(err))
         //this.changeColor()
-    }
+
+        // 1. Hent votes med assetId
+        // 2. Hent vote som er gjort av bruker (auth context)
+        // 3. Kjør changeState og changeColor
+    }*/
 
     /**
      * Makes changes when user clicks button
      * @param {integer 1, 2, 3} decision 
      */
-    handleClick(decision) {
-        this.changeState(decision)
-        this.changeColor(decision)
+    function handleClick(decision) {
+        changeState(decision)
+        changeColor(decision)
     }
 
     /**
@@ -41,7 +56,7 @@ class Decisions extends Component {
      * @param {int 1, 2, 3} decision 
      * @returns nothing
      */
-    changeState(decision) {
+    function changeState(decision) {
         let decisionString = "";
         switch (decision) {
             case 1:
@@ -56,27 +71,28 @@ class Decisions extends Component {
             default:
                 return
         }
-        this.setState({decision: decisionString}, this.sendResponse)
+        setDecision(decisionString)
     }
 
     /**
      * Changes the color states after which button has been pressed
      * @param {int 1, 2, 3} decision 
      */
-    changeColor(decision) {
-        const defaultColor = "green"
-        this.setState({fordeleColor: "#08B5A0"})
-        this.setState({donereColor: "#08B5A0"})
-        this.setState({kasteColor: "#08B5A0"})
+    function changeColor(decision) {
+
+        setFordeleColor("#08B5A0")
+        setDonereColor("#08B5A0")
+        setKasteColor("#08B5A0")
+
         switch (decision) {
             case 1:
-                this.setState({fordeleColor: "orange"})
+                setFordeleColor("orange")
                 break;
             case 2:
-                this.setState({donereColor: "orange"})
+                setDonereColor("orange")
                 break;
             case 3:
-                this.setState({kasteColor: "orange"})
+                setKasteColor("orange")
                 break;
             default:
         }
@@ -85,21 +101,26 @@ class Decisions extends Component {
     /**
      * Sends a update response to the correct asset
      */
-    sendResponse() {
-        console.log(this.state.decision)
+    function sendResponse() {
+        console.log("Response sent")
+        console.log(decision)
+        console.log(authToken)
+
         // PUT/POST api/assets/vote/assetid/uid/newvote
+        // 1. Sett inn brukerid gjennom auth context
+        // 2. sette in assetid gjennom this.props.id
+        // 3. sette vote med decision
+        
     }
+    
+    return (
+        <div className="decisions">
+            <button style={{backgroundColor: fordeleColor}} onClick={(e) => handleClick(1)}>Fordele</button>
+            <button style={{backgroundColor: donereColor}} onClick={(e) => handleClick(2)}>Donere</button>
+            <button style={{backgroundColor: kasteColor}} onClick={(e) => handleClick(3)}>Kaste</button>
+        </div>
+    );
 
-    render() {
-        return (
-            <div className="decisions">
-                <button style={{backgroundColor: this.state.fordeleColor}} onClick={(e) => this.handleClick(1)}>Fordele</button>
-                <button style={{backgroundColor: this.state.donereColor}} onClick={(e) => this.handleClick(2)}>Donere</button>
-                <button style={{backgroundColor: this.state.kasteColor}} onClick={(e) => this.handleClick(3)}>Kaste</button>
-            </div>
-        );
-
-    }
 }
 
 export default Decisions
