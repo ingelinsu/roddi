@@ -56,7 +56,10 @@ class Asset(models.Model):
     is_processed = models.BooleanField(default=False)
     belongs_to = models.ForeignKey('User', null=True, blank=True, on_delete=models.SET_NULL)
     comments = models.ManyToManyField(Comment, blank=True)
-    votes = {'distribute': [], 'throw': [], 'donate': []}
+
+    distribute_votes = models.ManyToManyField('User', blank=True, related_name='distribute_votes')
+    throw_votes = models.ManyToManyField('User', blank=True, related_name='throw_votes')
+    donate_votes = models.ManyToManyField('User', blank=True, related_name='donate_votes')
 
 
     def modify(self, param: str, new_value):
@@ -66,33 +69,43 @@ class Asset(models.Model):
     def comment(self, user, text: str):
         self.comments.create(text=text, submitter=user)
 
+
     def vote(self, user, vote):
         '''
         Add or change vote on action for asset. vote should be 'withdraw' if the user want to withdraw his/her vote
         '''
 
-        if vote not in self.votes.keys() and vote != 'withdraw':
+        if vote not in ['distribute', 'donate', 'throw', 'withdraw']:
             return None
 
-        for option in self.votes.keys():
-            if user.id in self.votes[option]:
-                self.votes[option].remove(user.id)
-        if vote != 'withdraw':
-            self.votes[vote].append(user.id)
+        if self.distribute_votes.filter(id=user.id).exists():
+            self.distribute_votes.remove(user)
+        elif self.throw_votes.filter(id=user.id).exists():
+            self.throw_votes.remove(user)
+        elif self.donate_votes.filter(id=user.id).exists():
+            self.donate_votes.remove(user)
+
+        if vote == 'distribute':
+            self.distribute_votes.add(user)
+        elif vote == 'throw':
+            self.throw_votes.add(user)
+        elif vote == 'donate':
+            self.donate_votes.add(user)
 
         self.to_be_distributed = False
         self.to_be_donated = False
         self.to_be_thrown = False
 
         # Set to_be_distributed=True if anyone voted distribute, or if there are no votes
-        if (len(self.votes['distribute']) > 0) or (len(self.votes['donate']) + len(self.votes['throw']) == 0): 
+        if (self.distribute_votes.count() > 0) or (self.donate_votes.count() + self.throw_votes.count() == 0): 
             self.to_be_distributed = True
 
         # Settle between donate and throw using majority. A tie results in donation, no votes results in throwing away
-        elif len(self.votes['donate']) >= len(self.votes['throw']):
+        elif self.donate_votes.count() >= self.throw_votes.count():
             self.to_be_donated = True
         else:
             self.to_be_thrown = True
+        self.save()
 
 
     def donate(self):
