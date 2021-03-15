@@ -60,13 +60,13 @@ function Decisions() {
         let decisionString = "";
         switch (decision) {
             case 1:
-                decisionString = "fordele"
+                decisionString = "distribute"
                 break;
             case 2:
-                decisionString = "donere"
+                decisionString = "donate"
                 break;
             case 3:
-                decisionString = "kaste"
+                decisionString = "throw"
                 break;
             default:
                 return
@@ -110,7 +110,10 @@ function Decisions() {
         // 1. Sett inn brukerid gjennom auth context
         // 2. sette in assetid gjennom this.props.id
         // 3. sette vote med decision
-        
+
+        axios
+        .get("http://127.0.0.1:8000/api/vote/" + authToken + "&" + props.assetId + "&" + decision)
+        .catch(err => console.log(err))
     }
     
     return (
