@@ -23,7 +23,8 @@ class AssetsPage extends Component {
     mapResponseData() {
         return this.state.data.map(asset => 
             <Asset 
-            key={asset.id} 
+            key={asset.id}
+            id={asset.id} 
             name={asset.name} 
             description={asset.description}
             image_url={asset.image_url}
