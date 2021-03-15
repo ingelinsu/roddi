@@ -48,28 +48,24 @@ def login_view(request, email, password):
       json_response = {'denied': 'wrong credentials'}
     return Response(json_response)
 
-@csrf_exempt # THIS IS NOT SECURE
-def reprioritize_view(request):
-  # This is exempt from cross-site scripting protection to make
-  # developent easier. If we can get the front end to store the
-  # cookies required to validate the api request, this could
-  # be made secure, but as we agreed upon, security is not a
-  # primary concern.
-  if request.method == "PUT":
-    try:
-      data = json.loads(request.body)
-      user_id = data["user"]
-      asset_id = data["asset"]
-      new_priority = data["priority"]
-    except:
-      return HttpResponse(status=400) # bad request
-    
-    # TODO act on the correctly formatted request.
-    print(user_id, asset_id, new_priority)
+@api_view(['GET'])
+def reprioritize_view(request, user_id, asset_id, new_prio):
+    """
+    Reprioritizes the users wish list based on REST query.
+    user_id     ID of user
+    asset_id    ID of asset
+    new_prio    Integer priority to be assigned
+    """
+    user = User.objects.get(id=user_id)
+    asset = Asset.objects.get(id=asset_id)
 
-    return HttpResponse(status=204) # no content (apparently this is convention)
-  else:
-    return HttpResponse(status=405) # method not allowed
+    # Apply repriotitization
+    user.reprioritize(asset, new_prio)
+
+    # The response can be safely ignored, but we might as well
+    # return something, so resolving the IDs seems fitting in
+    # case it ends up being useful.
+    return Response({'reprioritized': [user.name, asset.name]})
 
 
 def vote_view(request, user_id, asset_id, vote):
@@ -84,3 +80,15 @@ def vote_view(request, user_id, asset_id, vote):
 
   asset.vote(user, vote)
   return HttpResponse(status=204) # no content
+
+def register_view(request, name, pw, age, email):
+    """
+    Registers a new user with a REST query.
+    name    STR name for the user
+    pw      STR password for the user
+    age     INT age of the user
+    email   STR users email
+    """
+    user = User(name=name, password=pw, age=age, email=email)
+    user.save()
+    return HttpResponse(status=204) # no content
