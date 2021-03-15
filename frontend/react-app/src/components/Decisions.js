@@ -5,42 +5,56 @@ import {useAuth} from '../context/auth.js'
 
 import './Decisions.css'
 
-function Decisions() {
+function Decisions(props) {
 
     const [decision, setDecision] = useState("")
     const [fordeleColor, setFordeleColor] = useState("#08B5A0")
     const [donereColor, setDonereColor] = useState("#08B5A0")
     const [kasteColor, setKasteColor] = useState("#08B5A0")
+    const [responseReady, setResponseReady] = useState(false)
 
     const { authToken } = useAuth()
-
-    const prevDecision = usePrevious(decision)
-
+    
+    // Getting votes from API
     useEffect(() => {
-        if(prevDecision !== undefined) {
+        console.log("le votes")
+
+        const vote;
+        axios
+        .get("http://localhost:8000/api/assets/" + props.assetId)
+        .then(response => {
+            // Goes through each entry in object and tries to find vote responding to userId of logged in user
+            Object.entries(response.votes).forEach(entry => {
+                const [key, value] = entry
+                value.find(element => element === authToken) ? vote = key : vote = ""
+            })
+        })
+        .catch(err => console.log(err))
+
+        const decisionNr;
+        switch(vote) {
+            case "distribute" :
+                decisionNr = 1
+                break
+            case "donate" :
+                decisionNr = 2
+                break
+            case "throw" :
+                decisionNr = 3
+                break
+            default:
+                return
+        }
+        changeState(decisionNr)
+        changeColor(decisionNr)
+    }, [])
+
+    // Sends response on update of decision after getting votes from API
+    useEffect(() => {
+        if(responseReady) {
             sendResponse()
         }
     }, [decision])
-
-    function usePrevious(value) {
-        const ref = useRef();
-        useEffect(() => {
-          ref.current = value;
-        });
-        return ref.current;
-    }
-
-    /*componentDidMount() {
-        axios
-        .get("http://localhost:8000/api/assets/")
-        .then(response => this.setState({decision: response.data.decision}))
-        .catch(err => console.log(err))
-        //this.changeColor()
-
-        // 1. Hent votes med assetId
-        // 2. Hent vote som er gjort av bruker (auth context)
-        // 3. Kjør changeState og changeColor
-    }*/
 
     /**
      * Makes changes when user clicks button
@@ -49,10 +63,11 @@ function Decisions() {
     function handleClick(decision) {
         changeState(decision)
         changeColor(decision)
+        setResponseReady(true)
     }
 
     /**
-     * Changes the state of this.state.decision
+     * Changes the state of decision
      * @param {int 1, 2, 3} decision 
      * @returns nothing
      */
