@@ -15,7 +15,10 @@ class AssetSerializer(serializers.ModelSerializer):
       'to_be_donated',
       'is_processed',
       'belongs_to',
-      'comments'
+      'comments',
+      'distribute_votes',
+      'throw_votes',
+      'donate_votes'
     )
 
 class EstateAssetsSerializer(serializers.ModelSerializer):
