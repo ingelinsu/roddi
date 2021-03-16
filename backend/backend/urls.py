@@ -33,4 +33,5 @@ urlpatterns = [
     path('api/reprioritize/<int:user_id>&<int:asset_id>&<new_prio>', views.reprioritize_view),
     path('api/login/<str:email>&<str:password>', views.login_view, name='login'),
     path('api/register/<str:name>&<str:pw>&<int:age>&<str:email>', views.register_view, name='register'),
+    path('api/approve/<int:user_id>&<int:estate_id>', views.approve_view, name='approve'),
 ]
