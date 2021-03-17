@@ -1,4 +1,4 @@
-button {
+.decisions > button {
     border: none;
     color: white;
     padding: 5px 20px 5px 20px;
@@ -7,10 +7,10 @@ button {
     margin-left: 10px;
 }
 
-button:first-of-type {
+.decisions > button:first-of-type {
     margin: 0;
 }
 
-button:hover {
+.decisions > button:hover {
     color: lightgrey;
 }
