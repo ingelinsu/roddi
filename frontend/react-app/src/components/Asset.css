@@ -6,6 +6,10 @@
     padding:10px;
 }
 
+.assetWrapper:first-of-type {
+    margin-top: 0;
+}
+
 .assetName {
     margin: 0;
     font-size: x-large;
