@@ -67,6 +67,7 @@ def create_relations(users, estate):
     return relations
 
 
+
 def main():
     delete_all_data()
     users = create_users()

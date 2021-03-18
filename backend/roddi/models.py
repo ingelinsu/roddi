@@ -16,14 +16,14 @@ RELATION_WEIGHTS = {
 }
 
 RELATION_CHOICES = [
-    ('sibling', 'Sibling'),
-    ('parent', 'Parent'),
-    ('pibling', 'Uncle/Aunt'),
-    ('grandparent', 'Grandparent'),
-    ('child', 'Child'),
-    ('grandchild', 'Grandchild'),
-    ('other', 'Other')
-]
+        ('sibling', 'Sibling'),
+        ('parent', 'Parent'),
+        ('pibling', 'Uncle/Aunt'),
+        ('grandparent', 'Grandparent'),
+        ('child', 'Child'),
+        ('grandchild', 'Grandchild'),
+        ('other', 'Other')
+    ]
     
 
 class Comment(models.Model):
