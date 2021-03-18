@@ -5,20 +5,9 @@ import './Asset.css'
 import Decisions from './Decisions.js'
 
 class Asset extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            decision: ""
-        }
-        this.getDecision = this.getDecision.bind(this)
-    }
 
     onReprioritize(movement) {
         this.props.onReorder(this.props.id, movement)
-    }
-
-    getDecision(vote) {
-        this.setState({ decision: vote }, () => this.props.onDecision(this.state.decision))
     }
 
     render() {
@@ -40,7 +29,7 @@ class Asset extends Component {
                     </div>
 
                     <div className="buttons">
-                        <Decisions assetId={this.props.id} onVote={this.getDecision} />
+                        <Decisions assetId={this.props.id} />
                     </div>
                 </div>
             </div>

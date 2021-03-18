@@ -15,8 +15,6 @@ function Decisions(props) {
 
     // ready to send response to API
     const [responseReady, setResponseReady] = useState(false)
-    // ready to send decision made to Asset.js
-    const [callbackReady, setCallbackReady] = useState(false)
 
     const { authToken } = useAuth()
 
@@ -42,7 +40,6 @@ function Decisions(props) {
                 changeColor(decisionNr)
             })
             .catch(err => console.log(err))
-        setCallbackReady(true)
     }, [])
 
     // Sends response on update of decision after getting votes from API
@@ -50,11 +47,6 @@ function Decisions(props) {
         if (responseReady) {
             sendResponse()
         }
-        if (callbackReady) {
-            props.onVote(decision)
-        }
-
-        //props.onVote(decision)
     }, [decision])
 
     /**
