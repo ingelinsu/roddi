@@ -144,6 +144,14 @@ class User(models.Model):
         """
         return len(User.objects.all())
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for estate in self.relation_to_dead.all():
+            for asset in estate.assets.all():
+                self.reprioritize(asset, 0)
+
+
+
     id = models.IntegerField(primary_key=True, editable=False, default=_get_id)
     name = models.CharField(max_length=120, default='')
     email = models.EmailField(default='')
@@ -190,7 +198,7 @@ class User(models.Model):
                 wish.save()
             asset_wish = Wish.objects.create(user=self, asset=asset, priority=priority)
         asset_wish.save()
-        self.save()
+        # self.save()
         return asset_wish
 
     def get_ordered_wishlist(self, estate_id):
