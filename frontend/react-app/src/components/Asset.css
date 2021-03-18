@@ -1,9 +1,13 @@
-.asset {
+.assetWrapper {
     background-color: #afafaf;
     margin: 20px 20px;
     overflow: auto;
     height: 100%;
     padding:10px;
+}
+
+.assetWrapper:first-of-type {
+    margin-top: 0;
 }
 
 .assetName {
@@ -29,4 +33,20 @@
     float: left;
     margin-right: 20px;
 
+}
+
+.priority > button {
+    border: solid 1px grey;
+    background-color: lightblue;
+}
+
+.priority > button:hover {
+    background-color: white;
+}
+
+.priority {
+    display: inline-flex;
+    flex-direction: column;
+    width: 50px;
+    margin: 0;
 }

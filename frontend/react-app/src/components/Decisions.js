@@ -8,9 +8,12 @@ import './Decisions.css'
 function Decisions(props) {
 
     const [decision, setDecision] = useState("")
+
     const [fordeleColor, setFordeleColor] = useState("#08B5A0")
     const [donereColor, setDonereColor] = useState("#08B5A0")
     const [kasteColor, setKasteColor] = useState("#08B5A0")
+
+    // ready to send response to API
     const [responseReady, setResponseReady] = useState(false)
 
     const { authToken } = useAuth()
@@ -22,15 +25,12 @@ function Decisions(props) {
             .then(response => {
                 let decisionNr = 0;
                 if (response.data.distribute_votes.find(element => element === authToken)) {
-                    console.log('distribute')
                     decisionNr = 1
                 }
                 else if (response.data.throw_votes.find(element => element === authToken)) {
-                    console.log('throw')
                     decisionNr = 3
                 }
                 else if (response.data.donate_votes.find(element => element === authToken)) {
-                    console.log('donate')
                     decisionNr = 2
                 }
                 else {
