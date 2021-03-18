@@ -10,9 +10,9 @@ def delete_all_data():
 
 def create_users():
     users = [
-        User.objects.create(name='Daniel', email='daniefs@stud.ntnu.no', password='passord123', age=20, relation_to_dead='pibling'),
-        User.objects.create(name='Philip', email='philiped@stud.ntnu.no', password='passord123', age=20, relation_to_dead='sibling'),
-        User.objects.create(name='Steffen', email='steffeah@stud.ntnu.no', password='passord123', age=20, relation_to_dead='parent')
+        User.objects.create(name='Daniel', email='daniefs@stud.ntnu.no', password='passord123', age=20),
+        User.objects.create(name='Philip', email='philiped@stud.ntnu.no', password='passord123', age=20),
+        User.objects.create(name='Steffen', email='steffeah@stud.ntnu.no', password='passord123', age=20)
     ]
 
     for user in users:
@@ -59,12 +59,22 @@ def create_wishes(users, assets):
     return wishes
 
 
+def create_relations(users, estate):
+    relation_names = ['pibling', 'sibling', 'parent']
+    relations = [Relation.objects.create(user=users[i], estate=estate, relation=relation_names[i]) for i in range(len(users))]
+    for relation in relations:
+        relation.save()
+    return relations
+
+
+
 def main():
     delete_all_data()
     users = create_users()
     assets = create_assets()
-    create_estate(users, assets)
+    estate = create_estate(users, assets)
     create_wishes(users, assets)
+    create_relations(users, estate)
 
 
 if __name__ == '__main__':

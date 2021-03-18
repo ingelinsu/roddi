@@ -14,6 +14,16 @@ RELATION_WEIGHTS = {
         'pibling': 0.15,
         'other': 0.1
 }
+
+RELATION_CHOICES = [
+        ('sibling', 'Sibling'),
+        ('parent', 'Parent'),
+        ('pibling', 'Uncle/Aunt'),
+        ('grandparent', 'Grandparent'),
+        ('child', 'Child'),
+        ('grandchild', 'Grandchild'),
+        ('other', 'Other')
+    ]
     
 
 class Comment(models.Model):
@@ -145,17 +155,7 @@ class User(models.Model):
         ]
     )
 
-    RELATION_CHOICES = [
-        ('sibling', 'Sibling'),
-        ('parent', 'Parent'),
-        ('pibling', 'Uncle/Aunt'),
-        ('grandparent', 'Grandparent'),
-        ('child', 'Child'),
-        ('grandchild', 'Grandchild'),
-        ('other', 'Other')
-    ]
-
-    relation_to_dead = models.CharField(max_length=120, choices=RELATION_CHOICES, default='other')
+    relation_to_dead = models.ManyToManyField('Estate', through='Relation', related_name="relation_to_dead")
     wish_list = models.ManyToManyField(Asset, through='Wish', related_name="wish_list")
     obtained_assets = models.ManyToManyField(Asset, blank=True)
     latest_login = models.DateTimeField(auto_now_add=True)
@@ -209,6 +209,16 @@ class Wish(models.Model):
     
     def __str__(self):
         return f'{self.user}: {self.asset} ({self.priority})'
+
+
+class Relation(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    estate = models.ForeignKey('Estate', on_delete=models.CASCADE)
+    relation = models.CharField(max_length=120, choices=RELATION_CHOICES, default='other')
+    
+    
+    def __str__(self):
+        return f'{self.user}: {self.relation} in ({self.estate})'
 
 
 class Estate(models.Model):
@@ -265,7 +275,7 @@ class Estate(models.Model):
 
         assets = [a for a in self.assets.all() if a.to_be_distributed]
         asset_ids = [a.id for a in assets]
-        relations = [u.relation_to_dead for u in self.users.all()]
+        relations = [Relation.objects.all().get(user=u, estate=self).relation for u in self.users.all()]
         wishlists = [[a.id for a in u.get_ordered_wishlist() if a.id in asset_ids] for u in self.users.all()]
 
         # List of numbers representing priorities. [[1, 0, 2], ...] means that the first user wants asset nr 2 the most, then asset nr 1, then asset nr 3
