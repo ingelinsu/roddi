@@ -34,4 +34,5 @@ urlpatterns = [
     path('api/login/<str:email>&<str:password>', views.login_view, name='login'),
     path('api/register/<str:name>&<str:pw>&<int:age>&<str:email>', views.register_view, name='register'),
     path('api/approve/<int:user_id>&<int:estate_id>', views.approve_view, name='approve'),
+    path('api/sorted-assets/<int:user_id>&<int:estate_id>', views.sorted_assets_view, name='sorted_assets'),
 ]

@@ -5,9 +5,11 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication, TokenAuthentication
 from rest_framework.permissions import IsAuthenticated, AllowAny
+import django.core.serializers
+from django.forms.models import model_to_dict
 from .serializers import *
 from .models import *
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 import json
 
 
@@ -37,6 +39,38 @@ class CommentView(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
     queryset = Comment.objects.all()
 
+
+@api_view(['GET'])
+def sorted_assets_view(request, user_id, estate_id):
+    """
+    Reprioritizes the users wish list based on REST query.
+    user_id     ID of user
+    asset_id    ID of asset
+    new_prio    Integer priority to be assigned
+    """
+    user = User.objects.get(id=user_id)
+    estate = Estate.objects.get(id=estate_id)
+    assets = user.get_ordered_wishlist(estate.id)
+
+    json_response = {
+        'assets': [{'id': asset.id,
+                   'name': asset.name,
+                   'description': asset.description,
+                   'image_url': asset.image_url,
+                   'category': asset.category,
+                   'to_be_distributed': asset.to_be_distributed,
+                   'to_be_thrown': asset.to_be_thrown,
+                   'to_be_donated': asset.to_be_donated,
+                   'is_processed': asset.is_processed,
+                   'belongs_to': asset.belongs_to.id if asset.belongs_to else asset.belongs_to,
+                   'comments': [c.id for c in asset.comments.all()],
+                   'distribute_votes': [v.id for v in asset.distribute_votes.all()],
+                   'throw_votes': [v.id for v in asset.throw_votes.all()],
+                   'donate_votes': [v.id for v in asset.donate_votes.all()]
+            } for asset in assets]
+    }
+
+    return Response(json_response)
 
 @api_view(['GET'])
 def login_view(request, email, password):

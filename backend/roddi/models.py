@@ -193,8 +193,9 @@ class User(models.Model):
         self.save()
         return asset_wish
 
-    def get_ordered_wishlist(self):
-        return [wish.asset for wish in Wish.objects.filter(user=self).order_by('priority')]
+    def get_ordered_wishlist(self, estate_id):
+        estate_assets = Estate.objects.get(id=estate_id).assets.all()
+        return [wish.asset for wish in Wish.objects.filter(user=self).order_by('priority') if wish.asset in estate_assets]
 
 
 class Wish(models.Model):
@@ -276,7 +277,7 @@ class Estate(models.Model):
         assets = [a for a in self.assets.all() if a.to_be_distributed]
         asset_ids = [a.id for a in assets]
         relations = [Relation.objects.all().get(user=u, estate=self).relation for u in self.users.all()]
-        wishlists = [[a.id for a in u.get_ordered_wishlist() if a.id in asset_ids] for u in self.users.all()]
+        wishlists = [[a.id for a in u.get_ordered_wishlist(self) if a.id in asset_ids] for u in self.users.all()]
 
         # List of numbers representing priorities. [[1, 0, 2], ...] means that the first user wants the asset with index 1 the most, then 0, then 2
         priorities = [[wishlist.index(asset_id) for asset_id in asset_ids] for wishlist in wishlists]
