@@ -16,7 +16,7 @@ class AssetAdmin(admin.ModelAdmin):
                   'category')
 
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('name', 'email', 'password', 'age', 'relation_to_dead')
+    list_display = ('name', 'email', 'password', 'age')
 
 
 class CommentAdmin(admin.ModelAdmin):
