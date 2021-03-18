@@ -13,10 +13,10 @@ class Asset extends Component {
     render() {
         return (
             <div className="assetWrapper">
-                <div className="priority">
+                {/* <div className="priority">
                     <button type="button" onClick={(e) => this.onReprioritize("up")}>Up</button>
                     <button type="button" onClick={(e) => this.onReprioritize("down")}>Down</button>
-                </div>
+                </div> */}
                 <div className="asset">
                     <div className="assetImage">
                         <img src={this.props.image_url} style={{ height: 150, width: 150 }} />
