@@ -278,11 +278,11 @@ class Estate(models.Model):
         relations = [Relation.objects.all().get(user=u, estate=self).relation for u in self.users.all()]
         wishlists = [[a.id for a in u.get_ordered_wishlist() if a.id in asset_ids] for u in self.users.all()]
 
-        # List of numbers representing priorities. [[1, 0, 2], ...] means that the first user wants asset nr 2 the most, then asset nr 1, then asset nr 3
-        indexed_wishlists = [[asset_ids.index(asset_id) for asset_id in wishlist] for wishlist in wishlists]
+        # List of numbers representing priorities. [[1, 0, 2], ...] means that the first user wants the asset with index 1 the most, then 0, then 2
+        priorities = [[wishlist.index(asset_id) for asset_id in asset_ids] for wishlist in wishlists]
 
         # One-dimensional list with negative priorities. indexed_wishlists = [[1, 0, 2], ...] would give wish_hstack = [-2, -3, -1, ...]
-        wish_hstack = np.hstack(indexed_wishlists) - len(assets)
+        wish_hstack = np.hstack(priorities) - len(assets)
 
         # c defines the minimization function. We want to minimize the sum of products on the form negative_asset_priority * relation_weight for every asset-user-pair selected in the final matching
         c = np.array([wish_hstack[i] * RELATION_WEIGHTS[relations[i//len(assets)]] for i in range(len(wish_hstack))])
@@ -296,7 +296,7 @@ class Estate(models.Model):
         # We also multiply with a weight_factor, so that uncles and grandparents deserves less 'satisfaction' than children and siblings, etc.
         fair_distribution = [[wish_hstack[i] if len(assets) * j <= i < len(assets) * (j+1) else 0 for i in range(len(wish_hstack))] for j in range(len(self.users.all()))]
         weight_factor = 1 / max(RELATION_WEIGHTS[relation] for relation in relations)
-        fair_distribution_sum = [c[:len(assets)].sum() * RELATION_WEIGHTS[relation] * weight_factor / len(self.users.all()) for relation in relations]
+        fair_distribution_sum = [wish_hstack[:len(assets)].sum() * RELATION_WEIGHTS[relation] * weight_factor / len(self.users.all()) for relation in relations]
 
         # Concatenate the requirements to arrays G and h
         G = np.array(max_one_user_per_asset + fair_distribution)
