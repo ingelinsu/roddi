@@ -39,7 +39,6 @@ class UserSerializer(serializers.ModelSerializer):
             'name',
             'email',
             'age',
-            'relation_to_dead',
             'obtained_assets',
             'latest_login',
             'comments'

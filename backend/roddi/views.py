@@ -72,6 +72,15 @@ def sorted_assets_view(request, user_id, estate_id):
 
     return Response(json_response)
 
+
+@api_view(['GET'])
+def relation_to_dead_view(request, user_id, estate_id):
+    user = User.objects.get(id=user_id)
+    estate = Estate.objects.get(id=estate_id)
+    json_response = {'relation': Relation.objects.get(user=user, estate=estate).relation}
+    return Response(json_response)
+
+
 @api_view(['GET'])
 def login_view(request, email, password):
     users = User.objects.all()
