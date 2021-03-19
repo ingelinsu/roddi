@@ -11,6 +11,7 @@ from .serializers import *
 from .models import *
 from django.http import HttpResponse, JsonResponse
 import json
+import datetime
 
 
 class AssetView(viewsets.ModelViewSet):
@@ -83,12 +84,14 @@ def relation_to_dead_view(request, user_id, estate_id):
 
 @api_view(['GET'])
 def login_view(request, email, password):
-    users = User.objects.all()
-    matching_users = [u for u in users if u.email==email and u.password==password]
-    if len(matching_users) > 0:
-        json_response = {'id': matching_users[0].id}
+    if User.objects.filter(email=email, password=password).exists():
+        user = User.objects.get(email=email, password=password)
     else:
-        json_response = {'denied': 'wrong credentials'}
+        return HttpResponse('User ID not valid', status=400) # bad request
+    json_response = {'id': user.id}
+    user.latest_login = datetime.datetime.now()
+    user.save()
+        
     return Response(json_response)
 
 @api_view(['GET'])
@@ -154,16 +157,50 @@ def approve_view(request, user_id, estate_id):
     if Estate.objects.filter(id=estate_id).exists():
         estate = Estate.objects.get(id=estate_id)
     else:
-        return HttpResponse('Asset ID not valid', status=400) # bad request
+        return HttpResponse('Estate ID not valid', status=400) # bad request
     estate.approve(user)
     estate.save()
     return HttpResponse(status=204) # no content
 
 
-def alert_reminder(request, estate_id):
-    if Estate.objects.filter(id=estate_id).exists():
-        estate = Estate.objects.get(id=estate_id)
-    else:
-        return HttpResponse('Asset ID not valid', status=400) # bad request
-    estate.alert_reminder()
-    return HttpResponse(status=204) # no content
+@api_view(['GET'])
+def general_stats_view(request):
+    number_of_estates = Estate.objects.count()
+    number_of_users = User.objects.count()
+    number_of_assets = Asset.objects.count()
+    number_of_comments = Comment.objects.count()
+    json_response = {
+        'number_of_estates': number_of_estates,
+        'unfinished_estates': sum(e.is_complete for e in Estate.objects.all()),
+        'number_of_users': User.objects.count(),
+        'users_active_today': sum(u.latest_login.replace(tzinfo=None) > datetime.datetime.now() - datetime.timedelta(days=1) for u in User.objects.all()),
+        'users_active_week': sum(u.latest_login.replace(tzinfo=None) > datetime.datetime.now() - datetime.timedelta(days=7) for u in User.objects.all()),
+        'users_active_month': sum(u.latest_login.replace(tzinfo=None) > datetime.datetime.now() - datetime.timedelta(days=30) for u in User.objects.all()),
+        'users_per_estate': number_of_users / number_of_estates,
+        'assets_per_estate': Asset.objects.count() / number_of_estates,
+        'number_of_comments': Comment.objects.count(),
+        'commenting_users_percent': sum(u.comments.count() > 0 for u in User.objects.all()) / User.objects.count(),
+        'number_of_parents': Relation.objects.filter(relation='parent').count(),
+        'number_of_siblings': Relation.objects.filter(relation='sibling').count(),
+        'number_of_piblings': Relation.objects.filter(relation='pibling').count(),
+        'number_of_grandparents': Relation.objects.filter(relation='grandparent').count(),
+        'number_of_children': Relation.objects.filter(relation='children').count(),
+        'number_of_grandchildren': Relation.objects.filter(relation='grandchildren').count(),
+        'number_of_others': Relation.objects.filter(relation='other').count(),
+    }
+
+    return Response(json_response)
+
+
+@api_view(['GET'])
+def user_stats_view(request):
+    users = User.objects.all()
+    json_response = {
+        user.id: {
+            'age': user.age,
+            'latest_login': user.latest_login
+        }
+        for user in users
+    }
+
+    return Response(json_response)
