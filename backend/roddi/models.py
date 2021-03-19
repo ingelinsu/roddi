@@ -1,5 +1,6 @@
 from django.db import models, migrations
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.core.mail import send_mail
 import cvxopt
 from cvxopt.glpk import ilp
 import numpy as np
@@ -246,8 +247,15 @@ class Estate(models.Model):
     users = models.ManyToManyField(User, blank=True)
     assets = models.ManyToManyField(Asset, blank=True)
     approvals = models.ManyToManyField(User, related_name="approvals", blank=True)
-    is_complete = models.BooleanField(default=False)
+    is_complete = models.BooleanField(default=False, editable=False)
+    send_reminder_email = models.BooleanField(default=False)
 
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.send_reminder_email:
+            self.alert_reminder()
+            self.send_reminder_email = False
 
     def add_user(self, user: User):
         self.users.add(user)
@@ -269,7 +277,8 @@ class Estate(models.Model):
         self.approvals.add(user)
         if len(self.approvals) == len(self.users):
             full_distribution()
-
+            self._alert_finished()
+            self.is_complete = True
 
     def full_distribution(self):
         """
@@ -330,13 +339,44 @@ class Estate(models.Model):
                 assets[asset_index].process()
                 assets[asset_index].to_be_distributed = False
                 assets[asset_index].save()
-
-        self.is_complete = True
         
 
+    def _alert_message(self, message):
+        send_mail(
+            subject='Røddi oppgjør',
+            message=message,
+            from_email='roddi.team@gmail.com',
+            recipient_list=[user.email for user in self.users.all()],
+            fail_silently=False,
+        )
 
-    def alert_distribution(self):
-        pass
+
+    def alert_reminder(self):
+        message = f"""
+        Hei!
+        
+        Du er medlem i dødsboet "{self.name}". Det begynner å nærme seg oppgjør i dødsboet, så dersom du er ferdig med å prioritere eiendelene bør du godkjenne oppgjøret i applikasjonen.
+
+        Ha en ellers fin dag!
+
+        Med vennlig hilsen
+        Røddi-teamet
+        """
+        self._alert_message(message)
+
+
+    def _alert_finished(self):
+        message = f"""
+        Hei!
+        
+        Du er medlem i dødsboet "{self.name}". Dette dødsboet er nå ferdigstilt, så du kan se i applikasjonen hvilke eiendeler du har fått tildelt.
+
+        Ha en ellers fin dag!
+
+        Med vennlig hilsen
+        Røddi-teamet
+        """
+        self._alert_message(message)
 
 
     def __str__(self):

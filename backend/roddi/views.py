@@ -152,9 +152,18 @@ def approve_view(request, user_id, estate_id):
     else:
         return HttpResponse('User ID not valid', status=400) # bad request
     if Estate.objects.filter(id=estate_id).exists():
-        estate = Estate.objects.get(id=asset_id)
+        estate = Estate.objects.get(id=estate_id)
     else:
         return HttpResponse('Asset ID not valid', status=400) # bad request
     estate.approve(user)
     estate.save()
+    return HttpResponse(status=204) # no content
+
+
+def alert_reminder(request, estate_id):
+    if Estate.objects.filter(id=estate_id).exists():
+        estate = Estate.objects.get(id=estate_id)
+    else:
+        return HttpResponse('Asset ID not valid', status=400) # bad request
+    estate.alert_reminder()
     return HttpResponse(status=204) # no content
