@@ -204,3 +204,16 @@ def user_stats_view(request):
     }
 
     return Response(json_response)
+
+
+@api_view(['GET'])
+def asset_owner_view(request, asset_id):
+    if Asset.objects.filter(id=asset_id).exists():
+        asset = Asset.objects.get(id=asset_id)
+        json_response = {
+            'id': asset.belongs_to.id,
+            'name': asset.belongs_to.name
+        }
+        return Response(json_response)
+    else:
+        return HttpResponse('Asset has no owner', status=400) # bad request

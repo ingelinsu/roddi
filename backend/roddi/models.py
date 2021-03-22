@@ -256,6 +256,7 @@ class Estate(models.Model):
         if self.send_reminder_email:
             self.alert_reminder()
             self.send_reminder_email = False
+            self.save()
 
     def add_user(self, user: User):
         self.users.add(user)
@@ -275,8 +276,8 @@ class Estate(models.Model):
 
     def approve(self, user: User):
         self.approvals.add(user)
-        if len(self.approvals) == len(self.users):
-            full_distribution()
+        if self.approvals.count() == self.users.count():
+            self.full_distribution()
             self._alert_finished()
             self.is_complete = True
 
@@ -294,7 +295,7 @@ class Estate(models.Model):
         assets = [a for a in self.assets.all() if a.to_be_distributed]
         asset_ids = [a.id for a in assets]
         relations = [Relation.objects.all().get(user=u, estate=self).relation for u in self.users.all()]
-        wishlists = [[a.id for a in u.get_ordered_wishlist(self) if a.id in asset_ids] for u in self.users.all()]
+        wishlists = [[a.id for a in u.get_ordered_wishlist(self.id) if a.id in asset_ids] for u in self.users.all()]
 
         # List of numbers representing priorities. [[1, 0, 2], ...] means that the first user wants asset nr 2 the most, then asset nr 1, then asset nr 3
         indexed_wishlists = [[asset_ids.index(asset_id) for asset_id in wishlist] for wishlist in wishlists]
