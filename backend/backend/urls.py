@@ -36,6 +36,7 @@ urlpatterns = [
     path('api/approve/<int:user_id>&<int:estate_id>', views.approve_view, name='approve'),
     path('api/sorted-assets/<int:user_id>&<int:estate_id>', views.sorted_assets_view, name='sorted_assets'),
     path('api/relation-to-dead/<int:user_id>&<int:estate_id>', views.relation_to_dead_view, name='relation_to_dead'),
+    path('api/asset-owner/<int:asset_id>', views.asset_owner_view, name='asset_owner'),
     path('api/general-stats/', views.general_stats_view, name='general_stats'),
     path('api/user-stats/', views.user_stats_view, name='user_stats')
 ]
