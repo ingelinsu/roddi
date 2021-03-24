@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons';
+
 import './Asset.css'
 
 import Decisions from './Decisions.js'
@@ -13,10 +16,14 @@ class Asset extends Component {
     render() {
         return (
             <div className="assetWrapper">
-                {/* <div className="priority">
-                    <button type="button" onClick={(e) => this.onReprioritize("up")}>Up</button>
-                    <button type="button" onClick={(e) => this.onReprioritize("down")}>Down</button>
-                </div> */}
+                <div className="priorityWrapper" style={this.props.isPriorityView ? { display: "inline-block" } : { display: "none" }}>
+                    <div className="priority">
+                        <button type="button" onClick={(e) => this.onReprioritize("up")}><FontAwesomeIcon icon={faCaretUp} size="3x" /></button>
+                        <div className="priorityNr">{this.props.id}</div>
+                        <button type="button" onClick={(e) => this.onReprioritize("down")}><FontAwesomeIcon icon={faCaretDown} size="3x" /></button>
+                    </div>
+                </div>
+
                 <div className="asset">
                     <div className="assetImage">
                         <img src={this.props.image_url} style={{ height: 150, width: 150 }} />
@@ -29,7 +36,7 @@ class Asset extends Component {
                     </div>
 
                     <div className="buttons">
-                        <Decisions assetId={this.props.id} />
+                        <Decisions assetId={this.props.id} isPriorityView={this.props.isPriorityView} />
                     </div>
                 </div>
             </div>
