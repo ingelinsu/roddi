@@ -54,6 +54,7 @@ class AssetsPage extends Component {
             image_url={asset.image_url}
             category={asset.category}
             onReorder={this.reorderResponseData}
+            isPriorityView={this.state.isPriorityChecked}
         />)
 
     }
