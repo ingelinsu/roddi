@@ -1,5 +1,72 @@
+
 h1 {
     color: rgb(82, 97, 87);
     text-align: center;
+    margin-bottom: 30px;
 }
+
+.stats {
+    text-align: center;
+    margin-top: 80px;
+    margin-bottom: 0px;
+}
+
+
+.chart{
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.brukere, .dodsbo_oversikt {
+    text-align: center;
+    margin-top: 100px;
+}
+
+.dodsbo_oversikt {
+    width: 500px;
+    margin: auto;
+    margin-top: 80px;
+    border-width: 2px;
+    border-color:black;
+    border-style: solid;
+}
+
+
+.fragment{
+    margin-top: 50px;
+}
+
+.aktiv {
+    width: 100px;
+    display: inline-block;
+    margin-left: 40px;
+    margin-right: 40px;
+    border-width:2px;
+    border-style: hidden;
+    border-radius: 35px;
+    background-color: antiquewhite;
+}
+
+.antall{
+    font-size: x-large;
+    margin-top: 0px;
+    font-weight: bold;
+}
+
+.tid {
+    margin-top: 8px;
+    margin-bottom: 0px;
+}
+
+.tall {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+
+
+
+
 
