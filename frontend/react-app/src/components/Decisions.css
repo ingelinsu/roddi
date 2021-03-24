@@ -11,6 +11,12 @@
     margin: 0;
 }
 
-.decisions > button:hover {
+/* Change opacity when buttons are disabled */
+.decisions > button:disabled {
+    opacity: 0.5;
+}
+
+/* Only change hover opacity when button is not disabled */
+.decisions > button:hover:not(:disabled) {
     color: lightgrey;
 }

@@ -117,9 +117,9 @@ function Decisions(props) {
 
     return (
         <div className="decisions">
-            <button style={{ backgroundColor: fordeleColor }} onClick={(e) => handleClick(1)}>Fordele</button>
-            <button style={{ backgroundColor: donereColor }} onClick={(e) => handleClick(2)}>Donere</button>
-            <button style={{ backgroundColor: kasteColor }} onClick={(e) => handleClick(3)}>Kaste</button>
+            <button style={{ backgroundColor: fordeleColor }} onClick={(e) => handleClick(1)} disabled={props.isPriorityView}>Fordele</button>
+            <button style={{ backgroundColor: donereColor }} onClick={(e) => handleClick(2)} disabled={props.isPriorityView}>Donere</button>
+            <button style={{ backgroundColor: kasteColor }} onClick={(e) => handleClick(3)} disabled={props.isPriorityView}>Kaste</button>
         </div>
     );
 
