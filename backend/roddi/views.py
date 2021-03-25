@@ -10,6 +10,7 @@ from django.forms.models import model_to_dict
 from .serializers import *
 from .models import *
 from django.http import HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404
 import json
 import datetime
 
@@ -227,3 +228,17 @@ def asset_owner_view(request, asset_id):
         return Response(json_response)
     else:
         return HttpResponse('Asset has no owner', status=400) # bad request
+
+
+@api_view(['POST'])
+def post_comment_view(request, user, asset):
+    user = get_object_or_404(User, id=user)
+    asset = get_object_or_404(Asset, id=asset)
+
+    comment = Comment(submitter = user, 
+                      asset     = asset, 
+                      text      = request.body.decode('utf-8'))
+
+    comment.save()
+
+    return Response({"status": "ok"})

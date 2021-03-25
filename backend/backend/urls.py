@@ -40,5 +40,6 @@ urlpatterns = [
     path('api/relation-to-dead/<int:user_id>&<int:estate_id>', views.relation_to_dead_view, name='relation_to_dead'),
     path('api/asset-owner/<int:asset_id>', views.asset_owner_view, name='asset_owner'),
     path('api/general-stats/', views.general_stats_view, name='general_stats'),
-    path('api/user-stats/', views.user_stats_view, name='user_stats')
+    path('api/user-stats/', views.user_stats_view, name='user_stats'),
+    path('api/post-comment/<int:user>&<int:asset>', views.post_comment_view, name='post-comment')
 ]
