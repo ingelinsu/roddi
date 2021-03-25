@@ -242,3 +242,11 @@ def post_comment_view(request, user, asset):
     comment.save()
 
     return Response({"status": "ok"})
+
+@api_view(['DELETE'])
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    comment.is_deleted = True
+    comment.save()
+
+    return Response({"status": "ok"})
