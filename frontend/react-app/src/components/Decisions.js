@@ -24,13 +24,13 @@ function Decisions(props) {
             .get("http://localhost:8000/api/assets/" + props.assetId)
             .then(response => {
                 let decisionNr = 0;
-                if (response.data.distribute_votes.find(element => element === authToken)) {
+                if (!isNaN(response.data.distribute_votes.find(element => element === authToken))) {
                     decisionNr = 1
                 }
-                else if (response.data.throw_votes.find(element => element === authToken)) {
+                else if (!isNaN(response.data.throw_votes.find(element => element === authToken))) {
                     decisionNr = 3
                 }
-                else if (response.data.donate_votes.find(element => element === authToken)) {
+                else if (!isNaN(response.data.donate_votes.find(element => element === authToken))) {
                     decisionNr = 2
                 }
                 else {
