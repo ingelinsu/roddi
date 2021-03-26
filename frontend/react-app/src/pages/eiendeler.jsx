@@ -4,9 +4,13 @@ import axios from 'axios';
 import Asset from "../components/Asset"
 import Category from "../components/Category"
 
+import { AuthContext } from "../context/auth"
+
 import "./eiendeler.css"
 
 class AssetsPage extends Component {
+
+    static contextType = AuthContext
 
     constructor(props) {
         super(props)
@@ -14,6 +18,7 @@ class AssetsPage extends Component {
             assetsArray: [],
             isPriorityChecked: false
         }
+        this.getAuthToken = this.getAuthToken.bind(this)
     }
 
     togglePriorityChecked() {
@@ -23,10 +28,17 @@ class AssetsPage extends Component {
 
     }
 
+    getAuthToken() {
+        const { authToken } = this.context
+        return authToken
+    }
+
     setDistributionView() {
+        console.log("http://localhost:8000/api/sorted-assets/" + this.getAuthToken() + "&" + this.props.location.state.assetsKey)
         axios
-            .get("http://localhost:8000/api/estate-assets/" + this.props.location.state.assetsKey)
+            .get("http://localhost:8000/api/sorted-assets/" + this.getAuthToken() + "&" + this.props.location.state.assetsKey)
             .then(response => {
+                console.log(response)
                 this.setState({
                     assetsArray:
                         this.assetsToFilter(response.data.assets, this.state.isPriorityChecked)
@@ -72,10 +84,14 @@ class AssetsPage extends Component {
     }
 
     reorderResponseData(assetId, direction) {
+
+        axios.get("http://localhost:8000/api/reprioritize/" + this.getAuthToken() + "&" + assetId + "&" + 2)
+
         console.log("moved asset nr.: " + assetId + "-" + direction)
     }
 
     render() {
+
         return (
             <div className="eiendelerWrapper">
                 <div className="topBar">
