@@ -114,6 +114,20 @@ def reprioritize_view(request, user_id, asset_id, new_prio):
     return Response({'reprioritized': [user.name, asset.name]})
 
 
+@api_view(['GET'])
+def priority_view(request, user_id, asset_id):
+    """
+    Get priority of user for this asset.
+    user_id     ID of user
+    asset_id    ID of asset
+    """
+    user = User.objects.get(id=user_id)
+    asset = Asset.objects.get(id=asset_id)
+
+    priority = Wish.objects.get(user=user, asset=asset).priority
+    return Response({'priority': priority})
+
+
 def vote_view(request, user_id, asset_id, vote):
     """
     Set or change users vote for how to handle an asset.
@@ -204,3 +218,16 @@ def user_stats_view(request):
     }
 
     return Response(json_response)
+
+
+@api_view(['GET'])
+def asset_owner_view(request, asset_id):
+    if Asset.objects.filter(id=asset_id).exists():
+        asset = Asset.objects.get(id=asset_id)
+        json_response = {
+            'id': asset.belongs_to.id,
+            'name': asset.belongs_to.name
+        }
+        return Response(json_response)
+    else:
+        return HttpResponse('Asset has no owner', status=400) # bad request
