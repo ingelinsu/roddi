@@ -114,6 +114,20 @@ def reprioritize_view(request, user_id, asset_id, new_prio):
     return Response({'reprioritized': [user.name, asset.name]})
 
 
+@api_view(['GET'])
+def priority_view(request, user_id, asset_id):
+    """
+    Get priority of user for this asset.
+    user_id     ID of user
+    asset_id    ID of asset
+    """
+    user = User.objects.get(id=user_id)
+    asset = Asset.objects.get(id=asset_id)
+
+    priority = Wish.objects.get(user=user, asset=asset).priority
+    return Response({'priority': priority})
+
+
 def vote_view(request, user_id, asset_id, vote):
     """
     Set or change users vote for how to handle an asset.
