@@ -19,6 +19,7 @@ class AssetsPage extends Component {
             isPriorityChecked: false
         }
         this.getAuthToken = this.getAuthToken.bind(this)
+        this.reorderResponseData = this.reorderResponseData.bind(this)
     }
 
     togglePriorityChecked() {
@@ -85,7 +86,10 @@ class AssetsPage extends Component {
 
     reorderResponseData(assetId, direction) {
 
-        axios.get("http://localhost:8000/api/reprioritize/" + this.getAuthToken() + "&" + assetId + "&" + 2)
+        const token = this.getAuthToken();
+        console.log(token)
+
+        axios.get("http://localhost:8000/api/reprioritize/" + token + "&" + assetId + "&" + 1)
 
         console.log("moved asset nr.: " + assetId + "-" + direction)
     }
