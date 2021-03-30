@@ -15,17 +15,23 @@ class AssetsPage extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            assetsArray: [],
-            isPriorityChecked: false
+            assetsData: [],
+            isPriorityChecked: false,
         }
         this.getAuthToken = this.getAuthToken.bind(this)
         this.reorderResponseData = this.reorderResponseData.bind(this)
+        this.updatePriority = React.createRef()
+    }
+
+    componentDidMount() {
+        this.getAssets()
+        console.log("Component mounted...")
     }
 
     togglePriorityChecked() {
         this.setState({
             isPriorityChecked: !this.state.isPriorityChecked
-        }, () => this.setDistributionView());
+        }, () => this.getAssets());
 
     }
 
@@ -35,7 +41,7 @@ class AssetsPage extends Component {
     }
 
     setDistributionView() {
-        console.log("http://localhost:8000/api/sorted-assets/" + this.getAuthToken() + "&" + this.props.location.state.assetsKey)
+        /* console.log("http://localhost:8000/api/sorted-assets/" + this.getAuthToken() + "&" + this.props.location.state.assetsKey)
         axios
             .get("http://localhost:8000/api/sorted-assets/" + this.getAuthToken() + "&" + this.props.location.state.assetsKey)
             .then(response => {
@@ -47,7 +53,10 @@ class AssetsPage extends Component {
 
                 })
             })
-            .catch(err => console.log(err))
+            .catch(err => console.log(err)) */
+        //this.assetsToFilter()
+
+
     }
 
     assetsToFilter(assets, filterBoolean) {
@@ -58,43 +67,87 @@ class AssetsPage extends Component {
 
     }
 
-    assetToComponent(asset) {
-        return (<Asset
-            key={asset.id}
-            id={asset.id}
-            name={asset.name}
-            description={asset.description}
-            image_url={asset.image_url}
-            category={asset.category}
-            onReorder={this.reorderResponseData}
-            isPriorityView={this.state.isPriorityChecked}
-        />)
+    assetToComponent(useFilter) {
+        return this.assetsToFilter(this.state.assetsData, useFilter)
+            .map(asset => <Asset
+                key={asset.id}
+                id={asset.id}
+                name={asset.name}
+                description={asset.description}
+                image_url={asset.image_url}
+                category={asset.category}
+                onReorder={this.reorderResponseData}
+                isPriorityView={this.state.isPriorityChecked}
+                ref={this.updatePriority}
+            />)
 
+        //this.setState({ componentsMounted: assets.length })
     }
 
-    componentDidMount() {
+    getAssets() {
         axios
             .get("http://localhost:8000/api/estate-assets/" + this.props.location.state.assetsKey)
             .then(response => {
                 this.setState({
-                    assetsArray: response.data.assets.map(asset => this.assetToComponent(asset))//this.mapAssets(response)
-                })
+                    assetsData: response.data.assets//this.mapAssets(response)
+                }, () => console.log(this.state.assetsData))
 
             })//this.setState({ data: response.data.assets }))
             .catch(err => console.log(err))
+
+        /* else {
+            axios
+                .get("http://localhost:8000/api/sorted-assets/" + this.getAuthToken() + "&" + this.props.location.state.assetsKey)
+                .then(response => {
+                    this.setState({
+                        assetsData: response.data.assets//this.mapAssets(response)
+                    }, () => console.log(this.state.assetsData))
+
+                })//this.setState({ data: response.data.assets }))
+                .catch(err => console.log(err))
+        } */
+
     }
 
-    reorderResponseData(assetId, direction) {
+    reorderResponseData(assetId, currentPriority, direction, callback) {
+
+        let maxPriority = 0
+
+        this.state.assetsData.forEach(asset => asset.distribute_votes.includes(this.getAuthToken()) ? maxPriority++ : maxPriority += 0)
 
         const token = this.getAuthToken();
-        console.log(token)
 
-        axios.get("http://localhost:8000/api/reprioritize/" + token + "&" + assetId + "&" + 1)
+        console.log("asset nr. " + assetId + ": " + currentPriority)
 
-        console.log("moved asset nr.: " + assetId + "-" + direction)
+        let newPriority = 0;
+        if (direction === "up" /* && currentPriority !== maxPriority */) {
+            newPriority = currentPriority + 1;
+        }
+        else if (direction === "down" /* && currentPriority !== 0 */) {
+            newPriority = currentPriority - 1;
+        }
+
+        console.log("Changing to new priority: " + newPriority)
+        axios.get("http://localhost:8000/api/reprioritize/" + token + "&" + assetId + "&" + newPriority)
+            .then(response => console.log(response.data.reprioritized))
+            .catch(err => console.log(err))
+
+        //console.log("assset array length: " + this.state.assetsData.length)
+
+        this.getAssets()
+
+        callback()
+        //console.log("moved asset nr.: " + assetId + "-" + direction)
     }
 
     render() {
+        let maxPriority = 0
+
+        this.state.assetsData.forEach(asset => asset.distribute_votes.includes(this.getAuthToken()) ? maxPriority += 1 : maxPriority += 0)
+
+        console.log("rendering...")
+
+        console.log(maxPriority)
 
         return (
             <div className="eiendelerWrapper">
@@ -112,7 +165,7 @@ class AssetsPage extends Component {
                     <div className="switchText">Fordelingsprioritering</div>
                 </div>
                 <div className="assets">
-                    {this.state.assetsArray}
+                    {this.assetToComponent(this.state.isPriorityChecked)}
                 </div>
                 <div className="categories">
                     <Category />
