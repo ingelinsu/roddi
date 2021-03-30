@@ -148,8 +148,9 @@ class User(models.Model):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for estate in self.relation_to_dead.all():
-            for asset in estate.assets.all():
-                self.reprioritize(asset, 0)
+            if not Wish.objects.filter(user=self).exists:
+                for asset in estate.assets.all():
+                    self.reprioritize(asset, 0)
 
 
 
