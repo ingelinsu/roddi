@@ -112,6 +112,9 @@ function Decisions(props) {
     function sendResponse() {
         axios
             .get("http://127.0.0.1:8000/api/vote/" + authToken + "&" + props.assetId + "&" + decision)
+            .then(() => {
+                props.onDecision(decision)
+            })
             .catch(err => console.log(err))
     }
 

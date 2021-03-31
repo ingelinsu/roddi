@@ -17,17 +17,23 @@ class AssetsPage extends Component {
         this.state = {
             assetsData: [],
             isPriorityChecked: false,
+            maxPriority: 0
         }
         this.getAuthToken = this.getAuthToken.bind(this)
-        this.reorderResponseData = this.reorderResponseData.bind(this)
-        this.updatePriority = React.createRef()
+        this.getAssets = this.getAssets.bind(this)
+        this.setMaxPriority = this.setMaxPriority.bind(this)
+        this.getMaxPriority = this.getMaxPriority.bind(this)
+        this.reorderAssets = this.reorderAssets.bind(this)
+        this.useSortedAssets = this.useSortedAssets.bind(this)
     }
 
     componentDidMount() {
         this.getAssets()
-        console.log("Component mounted...")
     }
 
+    /**
+     * Toggles priority mode in state
+     */
     togglePriorityChecked() {
         this.setState({
             isPriorityChecked: !this.state.isPriorityChecked
@@ -35,40 +41,21 @@ class AssetsPage extends Component {
 
     }
 
+    /**
+     * Gets auth token of logged in user
+     * @returns auth token of user logged in
+     */
     getAuthToken() {
         const { authToken } = this.context
         return authToken
     }
 
-    setDistributionView() {
-        /* console.log("http://localhost:8000/api/sorted-assets/" + this.getAuthToken() + "&" + this.props.location.state.assetsKey)
-        axios
-            .get("http://localhost:8000/api/sorted-assets/" + this.getAuthToken() + "&" + this.props.location.state.assetsKey)
-            .then(response => {
-                console.log(response)
-                this.setState({
-                    assetsArray:
-                        this.assetsToFilter(response.data.assets, this.state.isPriorityChecked)
-                            .map(asset => this.assetToComponent(asset))
-
-                })
-            })
-            .catch(err => console.log(err)) */
-        //this.assetsToFilter()
-
-
-    }
-
-    assetsToFilter(assets, filterBoolean) {
-        if (filterBoolean) {
-            return assets.filter(asset => asset.distribute_votes.length > 0)
-        }
-        return assets
-
-    }
-
-    assetToComponent(useFilter) {
-        return this.assetsToFilter(this.state.assetsData, useFilter)
+    /**
+     * Maps assets to a list of components after sending them through filter method
+     * @returns A list with Asset components
+     */
+    assetToComponent() {
+        return this.assetsFilter()
             .map(asset => <Asset
                 key={asset.id}
                 id={asset.id}
@@ -76,79 +63,112 @@ class AssetsPage extends Component {
                 description={asset.description}
                 image_url={asset.image_url}
                 category={asset.category}
-                onReorder={this.reorderResponseData}
+                onGetAssets={this.getAssets}
+                onGetMaxPriority={this.getMaxPriority}
+                onReorderAssets={this.reorderAssets}
                 isPriorityView={this.state.isPriorityChecked}
-                ref={this.updatePriority}
             />)
-
-        //this.setState({ componentsMounted: assets.length })
     }
 
-    getAssets() {
-        axios
-            .get("http://localhost:8000/api/estate-assets/" + this.props.location.state.assetsKey)
-            .then(response => {
-                this.setState({
-                    assetsData: response.data.assets//this.mapAssets(response)
-                }, () => console.log(this.state.assetsData))
+    /**
+     * Filters assets after different statements
+     * @returns The filtered assets
+     */
+    assetsFilter() {
+        if (this.state.isPriorityChecked) {
+            return this.state.assetsData.filter(asset => asset.distribute_votes.length > 0)
+        }
+        return this.state.assetsData
+    }
 
-            })//this.setState({ data: response.data.assets }))
-            .catch(err => console.log(err))
-
-        /* else {
-            axios
+    /**
+     * Gets the latest asset changes from API, one for assets ordered by id and one ordered by priority
+     * @returns A promise resolution or rejection
+     */
+    async getAssets() {
+        if (!this.state.isPriorityChecked) {
+            return axios
+                .get("http://localhost:8000/api/estate-assets/" + this.props.location.state.assetsKey)
+                .then(response => {
+                    //Sets state then, calculates new highest priority possible
+                    this.setState({
+                        assetsData: response.data.assets
+                    }, () => this.setMaxPriority())
+                })
+                .catch(err => console.log(err))
+        }
+        else {
+            return axios
                 .get("http://localhost:8000/api/sorted-assets/" + this.getAuthToken() + "&" + this.props.location.state.assetsKey)
                 .then(response => {
                     this.setState({
-                        assetsData: response.data.assets//this.mapAssets(response)
-                    }, () => console.log(this.state.assetsData))
-
-                })//this.setState({ data: response.data.assets }))
+                        assetsData: response.data.assets
+                    })
+                })
                 .catch(err => console.log(err))
-        } */
+        }
 
     }
 
-    reorderResponseData(assetId, currentPriority, direction, callback) {
+    /**
+     * Sets the highest allowed priority in maxPriority state
+     */
+    setMaxPriority() {
+        let max = 0
+        this.state.assetsData.forEach(asset => asset.distribute_votes.includes(this.getAuthToken()) ? max++ : max += 0)
+        this.setState({ maxPriority: max })
+    }
 
-        let maxPriority = 0
+    /**
+     * Gets maxPriority state
+     * @returns maxPriority state
+     */
+    getMaxPriority() {
+        return this.state.maxPriority
+    }
 
-        this.state.assetsData.forEach(asset => asset.distribute_votes.includes(this.getAuthToken()) ? maxPriority++ : maxPriority += 0)
-
-        const token = this.getAuthToken();
-
-        console.log("asset nr. " + assetId + ": " + currentPriority)
-
-        let newPriority = 0;
-        if (direction === "up" /* && currentPriority !== maxPriority */) {
-            newPriority = currentPriority + 1;
-        }
-        else if (direction === "down" /* && currentPriority !== 0 */) {
-            newPriority = currentPriority - 1;
-        }
-
-        console.log("Changing to new priority: " + newPriority)
-        axios.get("http://localhost:8000/api/reprioritize/" + token + "&" + assetId + "&" + newPriority)
-            .then(response => console.log(response.data.reprioritized))
+    /**
+     * Reorders priority of all assets that use priority
+     * @param {The priority of the removed asset} removedPriority 
+     */
+    reorderAssets(removedPriority) {
+        axios
+            .get("http://localhost:8000/api/sorted-assets/" + this.getAuthToken() + "&" + this.props.location.state.assetsKey)
+            .then(response => this.useSortedAssets(response.data.assets, removedPriority))
+            .then(this.getAssets())
             .catch(err => console.log(err))
 
-        //console.log("assset array length: " + this.state.assetsData.length)
+    }
 
-        this.getAssets()
+    /**
+     * Uses the sorted assets to reprioritize the priority of all other assets that uses priority
+     * @param {Assets sorted by priority} assets 
+     * @param {The priority of the removed asset} removedPriority 
+     */
+    useSortedAssets(assets, removedPriority) {
+        let newPriority = removedPriority;
+        // Go through all assets and find all assets which has this users distribute votes
+        // Then check if that asset has a higher priority than the removed asset
+        // If it has move all higher priority assets to correct priority
+        assets.forEach(asset => {
+            if (asset.distribute_votes.includes(this.getAuthToken())) {
+                axios
+                    .get("http://localhost:8000/api/priority/" + this.getAuthToken() + "&" + asset.id)
+                    .then(response => {
+                        if (response.data.priority > removedPriority) {
+                            axios
+                                .get("http://localhost:8000/api/reprioritize/" + this.getAuthToken() + "&" + asset.id + "&" + newPriority)
+                                .then(newPriority++)
+                                .catch(err => console.log(err))
 
-        callback()
-        //console.log("moved asset nr.: " + assetId + "-" + direction)
+                        }
+                    })
+                    .catch(err => console.log(err))
+            }
+        })
     }
 
     render() {
-        let maxPriority = 0
-
-        this.state.assetsData.forEach(asset => asset.distribute_votes.includes(this.getAuthToken()) ? maxPriority += 1 : maxPriority += 0)
-
-        console.log("rendering...")
-
-        console.log(maxPriority)
-
         return (
             <div className="eiendelerWrapper">
                 <div className="topBar">
@@ -165,7 +185,7 @@ class AssetsPage extends Component {
                     <div className="switchText">Fordelingsprioritering</div>
                 </div>
                 <div className="assets">
-                    {this.assetToComponent(this.state.isPriorityChecked)}
+                    {this.assetToComponent()}
                 </div>
                 <div className="categories">
                     <Category />

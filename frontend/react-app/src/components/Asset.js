@@ -21,77 +21,115 @@ class Asset extends Component {
             priority: 0
         }
         this.getAuthToken = this.getAuthToken.bind(this)
-        this.onReprioritize = this.onReprioritize.bind(this)
         this.getPriority = this.getPriority.bind(this)
+        this.handleDecision = this.handleDecision.bind(this)
     }
 
     componentDidMount() {
         this.getPriority()
-        console.log(this.props.name + " is mounted...")
     }
 
-    /* componentDidUpdate(prevProps, prevState) {
-        console.log("component did update!")
+    componentDidUpdate() {
+        this.getPriority()
+    }
 
-        const token = this.getAuthToken();
-        axios.get("http://localhost:8000/api/priority/" + token + "&" + this.props.id)
+    /**
+     * Gets the latest priority of this asset from API
+     */
+    getPriority() {
+        axios.get("http://localhost:8000/api/priority/" + this.getAuthToken() + "&" + this.props.id)
             .then(response => {
                 const pri = response.data.priority
                 if (pri !== this.state.priority) {
+                    // if incoming priority is different from current, set new priority state
                     this.setState({ priority: response.data.priority })
                 }
             })
             .catch(err => console.log(err))
-
-    } */
-
-    getPriority() {
-        const token = this.getAuthToken();
-        console.log("getting prio")
-        axios.get("http://localhost:8000/api/priority/" + token + "&" + this.props.id)
-            .then(respone => this.setState({ priority: respone.data.priority }))
-            .catch(err => console.log(err))
     }
 
+    /**
+     * Gets auth token of logged in user
+     * @returns auth token of user logged in
+     */
     getAuthToken() {
         const { authToken } = this.context
         return authToken
     }
 
-    onReprioritize(movement) {
-        console.log("reprioritizing " + this.props.name)
-        //this.props.onReorder(this.props.id, this.state.priority, movement, callback)
-        console.log("done")
-
+    /**
+     * Updates the priority of this asset by -1 or +1
+     * @param {"up" or "down", decides new priority} direction 
+     */
+    addPriority(direction) {
         let newPriority = 0;
-        if (movement === "up" /* && currentPriority !== maxPriority */) {
-            newPriority = this.state.priority + 1;
-        }
-        else if (movement === "down" /* && currentPriority !== 0 */) {
+        if (direction === "up" && this.state.priority !== 0) {
             newPriority = this.state.priority - 1;
         }
+        else if (direction === "down" && this.state.priority !== this.props.onGetMaxPriority() - 1) {
+            newPriority = this.state.priority + 1;
+        }
 
-        console.log("Changing to new priority: " + newPriority)
+        if (this.state.priority !== newPriority) {
+            this.reprioritize(newPriority)
+        }
+    }
 
-        const token = this.getAuthToken();
+    /**
+     * Delegates changes to priority when decision has been changed for this asset
+     * @param {"distribute", "donate" or "throw", decides what to do with priority} decision 
+     */
+    async handleDecision(decision) {
+        await this.props.onGetAssets()
 
-        axios.get("http://localhost:8000/api/reprioritize/" + token + "&" + this.props.id + "&" + newPriority)
-            .then(this.getPriority())
+        if (decision === "distribute") {
+            this.giveMaxPriority()
+        }
+        else {
+            this.reorderAllPriorities()
+        }
+    }
+
+    /**
+     * Gives this asset the highest priority of all assets
+     */
+    giveMaxPriority() {
+        if (this.props.onGetMaxPriority() === 1 && this.state.priority !== 0) {
+            this.reprioritize(0)
+        }
+        else {
+            this.reprioritize(this.props.onGetMaxPriority() - 1)
+        }
+    }
+
+    /**
+     * Gives this asset a new priority
+     * @param {The new priority to use} newPriority 
+     */
+    reprioritize(newPriority) {
+        axios
+            .get("http://localhost:8000/api/reprioritize/" + this.getAuthToken() + "&" + this.props.id + "&" + newPriority)
+            .then(() => this.props.onGetAssets())
             .catch(err => console.log(err))
     }
 
+    /**
+     * Will make changes to priorities of other assets in eiendeler.jsx
+     */
+    reorderAllPriorities() {
+        if (this.props.onGetMaxPriority() !== this.state.priority) {
+            this.props.onReorderAssets(this.state.priority)
+        }
+    }
+
     render() {
-
-
-        console.log("priority for " + this.props.name + " is " + this.state.priority)
-
         return (
             <div className="assetWrapper">
                 <div className="priorityWrapper" style={this.props.isPriorityView ? { display: "inline-block" } : { display: "none" }}>
                     <div className="priority">
-                        <button type="button" onClick={(e) => this.onReprioritize("up")}><FontAwesomeIcon icon={faCaretUp} size="3x" /></button>
+                        <button type="button" onClick={(e) => this.addPriority("up")} disabled={this.state.priority === 0}><FontAwesomeIcon icon={faCaretUp} size="3x" /></button>
                         <div className="priorityNr">{this.state.priority}</div>
-                        <button type="button" onClick={(e) => this.onReprioritize("down")} disabled={this.state.priority === 0}><FontAwesomeIcon icon={faCaretDown} size="3x" /></button>
+                        <button type="button" onClick={(e) => this.addPriority("down")} disabled={this.state.priority === this.props.onGetMaxPriority() - 1}><FontAwesomeIcon icon={faCaretDown} size="3x" /></button>
                     </div>
                 </div>
 
@@ -107,12 +145,11 @@ class Asset extends Component {
                     </div>
 
                     <div className="buttons">
-                        <Decisions assetId={this.props.id} isPriorityView={this.props.isPriorityView} />
+                        <Decisions assetId={this.props.id} isPriorityView={this.props.isPriorityView} onDecision={this.handleDecision} />
                     </div>
                 </div>
             </div>
         );
-
     }
 }
 
