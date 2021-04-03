@@ -169,6 +169,7 @@ def register_view(request, name, pw, age, email):
     user.save()
     return HttpResponse(status=204) # no content
 
+
 def approve_view(request, user_id, estate_id):
     """
     Approve an estate, i. e. vote for starting distribution
@@ -186,6 +187,20 @@ def approve_view(request, user_id, estate_id):
     estate.approve(user)
     estate.save()
     return HttpResponse(status=204) # no content
+
+
+@api_view(['GET'])
+def approved_view(request, user_id, estate_id):
+    """
+    Check if estate is approved by user
+    user_id    INT id for the user
+    estate_id  INT id for the estate
+    """
+    if Estate.objects.filter(id=estate_id).exists():
+        estate = Estate.objects.get(id=estate_id)
+    else:
+        return HttpResponse('Estate ID not valid', status=400) # bad request
+    return Response({'approved': estate.approvals.filter(id=user_id).exists()})
 
 
 @api_view(['GET'])
