@@ -36,15 +36,17 @@ function App() {
   }
 
   return (
-    <div>
+    <div id="app">
 
       <AuthContext.Provider value={{ authToken, setAuthToken: setToken }}>
         <Router>
-          <Navbar />
-          <Route exact path="/" component={Main} />
-          <Route exact path="/login" component={Login} />
-          <PrivateRoute exact path="/eiendeler" component={Assets} />
-          <PrivateRoute exact path="/dodsbo" component={Estate} />
+            <Navbar />
+            <div id="content">
+                <Route exact path="/" component={Main} />
+                <Route exact path="/login" component={Login} />
+                <PrivateRoute exact path="/eiendeler" component={Assets} />
+                <PrivateRoute exact path="/dodsbo" component={Estate} />
+            </div>
           <Footer />
         </Router>
       </AuthContext.Provider>
