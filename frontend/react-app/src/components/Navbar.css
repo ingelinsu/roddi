@@ -11,12 +11,18 @@ nav {
 }
 
 .logo {
+    position: absolute;
+    height: 70px;
     float: left;
     font-weight: bold;
     font-size: 75px;
     color: rgb(82, 97, 87);
     margin-left: 20px;
-    margin-top: -5px
+    margin-top: 5px
+}
+
+.logo img {
+    height: 100%;
 }
 
 li .logout:hover {
