@@ -10,6 +10,7 @@ from django.forms.models import model_to_dict
 from .serializers import *
 from .models import *
 from django.http import HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404
 import json
 import datetime
 
@@ -31,6 +32,16 @@ class UserEstatesView(viewsets.ModelViewSet):
     # JSON view for all the estates associated with a user.
     serializer_class = UserEstatesSerializer
     queryset = User.objects.all()
+
+class UserCommentsView(viewsets.ModelViewSet):
+    # JSON view for all the estates associated with a user.
+    serializer_class = UserCommentsSerializer
+    queryset = User.objects.all()
+
+class AssetCommentsView(viewsets.ModelViewSet):
+    # JSON view for all the estates associated with a user.
+    serializer_class = AssetCommentsSerializer
+    queryset = Asset.objects.all()
 
 class EstateView(viewsets.ModelViewSet):
     serializer_class = EstateSerializer
@@ -231,3 +242,33 @@ def asset_owner_view(request, asset_id):
         return Response(json_response)
     else:
         return HttpResponse('Asset has no owner', status=400) # bad request
+
+
+@api_view(['POST'])
+def post_comment_view(request, user, asset):
+    user = get_object_or_404(User, id=user)
+    asset = get_object_or_404(Asset, id=asset)
+
+    comment = Comment(submitter = user, 
+                      asset     = asset, 
+                      text      = request.body.decode('utf-8'))
+
+    comment.save()
+
+    return Response({"status": "ok"})
+
+@api_view(['DELETE'])
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    comment.is_deleted = True
+    comment.save()
+
+    return Response({"status": "ok"})
+
+@api_view(['PUT'])
+def edit_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    comment.text = request.body.decode('utf-8')
+    comment.save()
+
+    return Response({"status": "ok"})

@@ -36,10 +36,24 @@ class Comment(models.Model):
         """
         return len(Comment.objects.all())
 
+    # Identification; comment is related to a user who
+    # submitted it, and the asset on which the comment
+    # was left.
     id = models.IntegerField(primary_key=True, editable=False, default=_get_id)
     submitter = models.ForeignKey('User', on_delete=models.CASCADE)
+    asset  = models.ForeignKey('Asset', on_delete=models.CASCADE)
+
+    # there is an asset field on here which is the reverse
+    # query name for Asset.comments..
+
+    # Comment contents
     text = models.CharField(max_length=120, default='')
     timestamp = models.DateTimeField(auto_now_add=True)
+
+    # Tagging it as deleted without actually removing it
+    # is ideal if we want to support threads, since deleting
+    # a comment in a chain of comments would make it hard
+    # to maintain integrity.
     is_deleted = models.BooleanField(default=False)
     
 
@@ -66,7 +80,6 @@ class Asset(models.Model):
     to_be_donated = models.BooleanField(default=False)
     is_processed = models.BooleanField(default=False)
     belongs_to = models.ForeignKey('User', null=True, blank=True, on_delete=models.SET_NULL)
-    comments = models.ManyToManyField(Comment, blank=True)
 
     distribute_votes = models.ManyToManyField('User', blank=True, related_name='distribute_votes')
     throw_votes = models.ManyToManyField('User', blank=True, related_name='throw_votes')
@@ -78,7 +91,8 @@ class Asset(models.Model):
 
 
     def comment(self, user, text: str):
-        self.comments.create(text=text, submitter=user)
+        c = Comment(submitter=user, asset=self, text=text)
+        c.save()
 
 
     def vote(self, user, vote):
