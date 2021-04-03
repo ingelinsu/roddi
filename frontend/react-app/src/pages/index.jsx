@@ -9,7 +9,7 @@ import Login from "../components/Login"
 const MainPage = () => {
   return (
     <div>
-      <h3 id="tittel">Velkommen til nettsiden</h3>
+      <h3 id="tittel">Velkommen til Røddi</h3>
       <MainContent />
       <Login />
     </div>
