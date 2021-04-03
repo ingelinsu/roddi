@@ -26,19 +26,13 @@ class AssetsPage extends Component {
         this.getMaxPriority = this.getMaxPriority.bind(this)
         this.reorderAssets = this.reorderAssets.bind(this)
         this.useSortedAssets = this.useSortedAssets.bind(this)
-
-
-
-        axios
-        .get("http://localhost:8000/api/approved/" + this.getAuthToken() + "&" + this.props.location.state.assetsKey)
-        .then(response => this.state.isApproved = response.data.approved)
     }
 
     componentDidMount() {
         this.getAssets()
         axios
         .get("http://localhost:8000/api/approved/" + this.getAuthToken() + "&" + this.props.location.state.assetsKey)
-        .then(response => this.state.isApproved = response.data.approved)
+        .then(response => {if (response.data.approved) { this.approve() }})
     }
 
     /**
@@ -191,7 +185,7 @@ class AssetsPage extends Component {
         return (
             <div className="eiendelerWrapper">
                 <div className="topBar">
-                    <div className="topBarText">{ this.state.isApproved ? "Du har gjort deg ferdig med dette dødsboet. Du kan fortsatt endre valgene dine til de resten har blitt ferdig." :  "Er du ferdig med fordeling og avstemning for dette dødsboet?" }</div>
+                    <div className="topBarText">{ this.state.isApproved ? "Du har gjort deg ferdig med dette dødsboet. Du kan fortsatt endre valgene dine til resten har blitt ferdig." :  "Er du ferdig med fordeling og avstemning for dette dødsboet?" }</div>
                     {this.state.isApproved ? "" :
                         <div className="topBarButton finishedButton">
                             <label className="switch">
