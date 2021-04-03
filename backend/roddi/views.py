@@ -75,7 +75,6 @@ def sorted_assets_view(request, user_id, estate_id):
                    'to_be_donated': asset.to_be_donated,
                    'is_processed': asset.is_processed,
                    'belongs_to': asset.belongs_to.id if asset.belongs_to else asset.belongs_to,
-                   'comments': [c.id for c in asset.comments.all()],
                    'distribute_votes': [v.id for v in asset.distribute_votes.all()],
                    'throw_votes': [v.id for v in asset.throw_votes.all()],
                    'donate_votes': [v.id for v in asset.donate_votes.all()]
