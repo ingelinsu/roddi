@@ -17,6 +17,7 @@ class AssetsPage extends Component {
         this.state = {
             assetsData: [],
             isPriorityChecked: false,
+            isApproved: false,
             maxPriority: 0
         }
         this.getAuthToken = this.getAuthToken.bind(this)
@@ -29,6 +30,19 @@ class AssetsPage extends Component {
 
     componentDidMount() {
         this.getAssets()
+        axios
+        .get("http://localhost:8000/api/approved/" + this.getAuthToken() + "&" + this.props.location.state.assetsKey)
+        .then(response => {if (response.data.approved) { this.approve() }})
+    }
+
+    /**
+     * Toggles priority mode in state
+     */
+    approve() {
+        axios.get("http://localhost:8000/api/approve/" + this.getAuthToken() + "&" + this.props.location.state.assetsKey);
+        this.setState({
+            isApproved: true
+        });
     }
 
     /**
@@ -38,7 +52,6 @@ class AssetsPage extends Component {
         this.setState({
             isPriorityChecked: !this.state.isPriorityChecked
         }, () => this.getAssets());
-
     }
 
     /**
@@ -172,17 +185,33 @@ class AssetsPage extends Component {
         return (
             <div className="eiendelerWrapper">
                 <div className="topBar">
-                    <div className="priorityButton">
+                    <div className="topBarText">{ this.state.isApproved ? "Du har gjort deg ferdig med dette dødsboet. Du kan fortsatt endre valgene dine til resten har blitt ferdig." :  "Er du ferdig med fordeling og avstemning for dette dødsboet?" }</div>
+                    {this.state.isApproved ? "" :
+                        <div className="topBarButton finishedButton">
+                            <label className="switch">
+                                <input
+                                    type="checkbox"
+                                    defaultChecked={this.state.isApproved}
+                                    onChange={(e) => this.approve()}
+                                    disabled = {this.state.isApproved}>
+                                </input>
+                                <span className="slider"></span>
+                            </label>
+                        </div>
+                    }
+                </div>
+                <div className="topBar">
+                    <div className="topBarButton">
                         <label className="switch">
                             <input
                                 type="checkbox"
-                                defaultChecked={this.state.isChecked}
+                                defaultChecked={this.state.isPriorityChecked}
                                 onChange={(e) => this.togglePriorityChecked()}>
                             </input>
                             <span className="slider"></span>
                         </label>
                     </div>
-                    <div className="switchText">Fordelingsprioritering</div>
+                    <div className="topBarText">Fordelingsprioritering</div>
                 </div>
                 <div className="assets">
                     {this.assetToComponent()}
