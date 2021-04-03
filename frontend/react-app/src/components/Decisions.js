@@ -24,13 +24,13 @@ function Decisions(props) {
             .get("http://localhost:8000/api/assets/" + props.assetId)
             .then(response => {
                 let decisionNr = 0;
-                if (response.data.distribute_votes.find(element => element === authToken)) {
+                if (!isNaN(response.data.distribute_votes.find(element => element === authToken))) {
                     decisionNr = 1
                 }
-                else if (response.data.throw_votes.find(element => element === authToken)) {
+                else if (!isNaN(response.data.throw_votes.find(element => element === authToken))) {
                     decisionNr = 3
                 }
-                else if (response.data.donate_votes.find(element => element === authToken)) {
+                else if (!isNaN(response.data.donate_votes.find(element => element === authToken))) {
                     decisionNr = 2
                 }
                 else {
@@ -112,14 +112,17 @@ function Decisions(props) {
     function sendResponse() {
         axios
             .get("http://127.0.0.1:8000/api/vote/" + authToken + "&" + props.assetId + "&" + decision)
+            .then(() => {
+                props.onDecision(decision)
+            })
             .catch(err => console.log(err))
     }
 
     return (
         <div className="decisions">
-            <button style={{ backgroundColor: fordeleColor }} onClick={(e) => handleClick(1)}>Fordele</button>
-            <button style={{ backgroundColor: donereColor }} onClick={(e) => handleClick(2)}>Donere</button>
-            <button style={{ backgroundColor: kasteColor }} onClick={(e) => handleClick(3)}>Kaste</button>
+            <button style={{ backgroundColor: fordeleColor }} onClick={(e) => handleClick(1)} disabled={props.isPriorityView}>Fordele</button>
+            <button style={{ backgroundColor: donereColor }} onClick={(e) => handleClick(2)} disabled={props.isPriorityView}>Donere</button>
+            <button style={{ backgroundColor: kasteColor }} onClick={(e) => handleClick(3)} disabled={props.isPriorityView}>Kaste</button>
         </div>
     );
 
