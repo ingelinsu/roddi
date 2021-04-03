@@ -32,7 +32,7 @@ function Navbar() {
 
   return (
     <nav role="navigation">
-      <div className="logo"><img src={logo}/></div>
+      <div className="logo"><Link to="/"><img src={logo}/></Link></div>
       <div className="menuToggle">
         <input type="checkbox" />
 
