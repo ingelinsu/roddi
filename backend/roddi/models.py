@@ -38,6 +38,7 @@ class Comment(models.Model):
 
     id = models.IntegerField(primary_key=True, editable=False, default=_get_id)
     submitter = models.ForeignKey('User', on_delete=models.CASCADE)
+    #name = models.CharField(submitter.name)
     text = models.CharField(max_length=120, default='')
     timestamp = models.DateTimeField(auto_now_add=True)
     is_deleted = models.BooleanField(default=False)

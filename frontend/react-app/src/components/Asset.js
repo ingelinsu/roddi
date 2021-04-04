@@ -4,6 +4,10 @@ import './Asset.css'
 
 import Decisions from './Decisions.js'
 
+import {
+    Link
+  } from "react-router-dom";
+
 class Asset extends Component {
 
     onReprioritize(movement) {
@@ -12,6 +16,10 @@ class Asset extends Component {
 
     render() {
         return (
+            <Link to={{
+                pathname: "/comment",
+                state: {commentsKey: this.props.id}
+            }} className="commentLink">
             <div className="assetWrapper">
                 {/* <div className="priority">
                     <button type="button" onClick={(e) => this.onReprioritize("up")}>Up</button>
@@ -21,7 +29,7 @@ class Asset extends Component {
                     <div className="assetImage">
                         <img src={this.props.image_url} style={{ height: 150, width: 150 }} />
                     </div>
-
+            
                     <div className="assetContent">
                         <p className="assetName">{this.props.name}</p>
                         <p className="assetCategory">{this.props.category}</p>
@@ -33,6 +41,7 @@ class Asset extends Component {
                     </div>
                 </div>
             </div>
+            </Link>
         );
 
     }
