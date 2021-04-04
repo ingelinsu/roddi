@@ -18,7 +18,9 @@ class AssetsPage extends Component {
             assetsData: [],
             isPriorityChecked: false,
             isApproved: false,
-            maxPriority: 0
+            maxPriority: 0,
+            categories: {},
+            category: ""
         }
         this.getAuthToken = this.getAuthToken.bind(this)
         this.getAssets = this.getAssets.bind(this)
@@ -26,13 +28,14 @@ class AssetsPage extends Component {
         this.getMaxPriority = this.getMaxPriority.bind(this)
         this.reorderAssets = this.reorderAssets.bind(this)
         this.useSortedAssets = this.useSortedAssets.bind(this)
+        this.categorize = this.categorize.bind(this)
     }
 
     componentDidMount() {
         this.getAssets()
         axios
-        .get("http://localhost:8000/api/approved/" + this.getAuthToken() + "&" + this.props.location.state.assetsKey)
-        .then(response => {if (response.data.approved) { this.approve() }})
+            .get("http://localhost:8000/api/approved/" + this.getAuthToken() + "&" + this.props.location.state.assetsKey)
+            .then(response => { if (response.data.approved) { this.approve() } })
     }
 
     /**
@@ -88,10 +91,23 @@ class AssetsPage extends Component {
      * @returns The filtered assets
      */
     assetsFilter() {
-        if (this.state.isPriorityChecked) {
+        /* if(this.state.assetsData.length )
+        console.log(this.state.assetsData[1].category) */
+        if (!this.state.isPriorityChecked && this.state.category.length === 0) {
+            return this.state.assetsData
+        }
+        if (this.state.isPriorityChecked && this.state.category.length === 0) {
             return this.state.assetsData.filter(asset => asset.distribute_votes.length > 0)
         }
-        return this.state.assetsData
+        let data = []
+        if (this.state.isPriorityChecked && this.state.category.length > 0) {
+            return this.state.assetsData.filter(asset => asset.distribute_votes.length > 0 && asset.category === this.state.category)
+        }
+        if (!this.state.isPriorityChecked && this.state.category.length > 0) {
+            return this.state.assetsData.filter(asset => asset.category === this.state.category)
+        }
+        return data
+
     }
 
     /**
@@ -106,7 +122,10 @@ class AssetsPage extends Component {
                     //Sets state then, calculates new highest priority possible
                     this.setState({
                         assetsData: response.data.assets
-                    }, () => this.setMaxPriority())
+                    }, () => {
+                        this.setMaxPriority()
+                        this.getCategories()
+                    })
                 })
                 .catch(err => console.log(err))
         }
@@ -181,11 +200,32 @@ class AssetsPage extends Component {
         })
     }
 
+    getCategories() {
+        let categoryObj = {}
+        let nr = 0
+        this.state.assetsData.forEach(asset => {
+            if (!Object.values(categoryObj).includes(asset.category)) {
+                categoryObj[nr] = asset.category
+                nr++
+            }
+        })
+        this.setState({ categories: categoryObj })
+
+    }
+
+    categorize(value) {
+        console.log("category:" + value)
+        this.setState({ category: value })
+    }
+
     render() {
+
+        console.log(this.state.category)
+
         return (
             <div className="eiendelerWrapper">
                 <div className="topBar">
-                    <div className="topBarText">{ this.state.isApproved ? "Du har gjort deg ferdig med dette dødsboet. Du kan fortsatt endre valgene dine til resten har blitt ferdig." :  "Er du ferdig med fordeling og avstemning for dette dødsboet?" }</div>
+                    <div className="topBarText">{this.state.isApproved ? "Du har gjort deg ferdig med dette dødsboet. Du kan fortsatt endre valgene dine til resten har blitt ferdig." : "Er du ferdig med fordeling og avstemning for dette dødsboet?"}</div>
                     {this.state.isApproved ? "" :
                         <div className="topBarButton finishedButton">
                             <label className="switch">
@@ -193,7 +233,7 @@ class AssetsPage extends Component {
                                     type="checkbox"
                                     defaultChecked={this.state.isApproved}
                                     onChange={(e) => this.approve()}
-                                    disabled = {this.state.isApproved}>
+                                    disabled={this.state.isApproved}>
                                 </input>
                                 <span className="slider"></span>
                             </label>
@@ -217,7 +257,7 @@ class AssetsPage extends Component {
                     {this.assetToComponent()}
                 </div>
                 <div className="categories">
-                    <Category />
+                    <Category categories={this.state.categories} onCategorize={this.categorize} />
                 </div>
             </div >
         );
