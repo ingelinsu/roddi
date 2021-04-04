@@ -1,0 +1,57 @@
+.login-wrapper {
+    /* line-height: normal; */
+    color: rgb(255, 255, 255);
+    align-items: center;
+  
+    display: flex;
+    /*float: right;*/
+    flex-direction: column;
+    
+    background:  #b3c5b9;
+    
+  
+    height: 596px;
+    margin-left: 800px;
+    margin-top: -604px;
+   
+  
+    border-bottom: 1px solid #58a4b0;
+    border: 0;
+    padding: 2px 10px;
+    
+  }
+  
+  .knapp {
+    text-align: center;
+    border-radius: 3px;
+    padding: 8px 16px;
+    font-size: 20px;
+    margin-top: 20px;
+    border: none;
+  }
+
+  .knapp:hover {
+      background-color: rgb(230, 230, 230);
+  }
+
+  .login-wrapper input {
+      padding: 8px 10px;
+      border: solid 1px lightgrey;
+      font-size: large;
+  }
+
+  .login-wrapper input:hover {
+    border: solid 1px grey;
+}
+
+.login-wrapper h1 {
+    margin: 40px 0 30px 0;
+    color: rgb(85, 141, 85);
+    font-size: 30px;
+
+}
+
+.login-wrapper h2 {
+    margin: 25px 0 10px 0;
+    font-size: x-large;
+}
