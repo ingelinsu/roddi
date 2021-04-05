@@ -15,7 +15,6 @@ class AssetSerializer(serializers.ModelSerializer):
       'to_be_donated',
       'is_processed',
       'belongs_to',
-      'comments',
       'distribute_votes',
       'throw_votes',
       'donate_votes'
@@ -66,7 +65,9 @@ class CommentSerializer(serializers.ModelSerializer):
             'id',
             'text',
             'timestamp',
-            'is_deleted'
+            'is_deleted',
+            'submitter',
+            'asset'
         )
 
 class UserEstatesSerializer(serializers.ModelSerializer):
@@ -77,3 +78,15 @@ class UserEstatesSerializer(serializers.ModelSerializer):
             'id',
             'estate_set',
         )
+
+class UserCommentsSerializer(serializers.ModelSerializer):
+    comment_set = CommentSerializer(many=True)
+    class Meta:
+        model = User
+        fields = ('id', 'comment_set')
+
+class AssetCommentsSerializer(serializers.ModelSerializer):
+    comment_set = CommentSerializer(many=True)
+    class Meta:
+        model = Asset
+        fields = ('id', 'comment_set')

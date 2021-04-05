@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import logo from '../images/logo.png';
 
 import { useAuth } from "../context/auth.js";
 
@@ -31,7 +32,7 @@ function Navbar() {
 
   return (
     <nav role="navigation">
-      <div className="logo">-R- RØDDI</div>
+      <div className="logo"><Link to="/"><img src={logo}/></Link></div>
       <div className="menuToggle">
         <input type="checkbox" />
 

@@ -10,6 +10,7 @@ from django.forms.models import model_to_dict
 from .serializers import *
 from .models import *
 from django.http import HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404
 import json
 import datetime
 
@@ -31,6 +32,16 @@ class UserEstatesView(viewsets.ModelViewSet):
     # JSON view for all the estates associated with a user.
     serializer_class = UserEstatesSerializer
     queryset = User.objects.all()
+
+class UserCommentsView(viewsets.ModelViewSet):
+    # JSON view for all the estates associated with a user.
+    serializer_class = UserCommentsSerializer
+    queryset = User.objects.all()
+
+class AssetCommentsView(viewsets.ModelViewSet):
+    # JSON view for all the estates associated with a user.
+    serializer_class = AssetCommentsSerializer
+    queryset = Asset.objects.all()
 
 class EstateView(viewsets.ModelViewSet):
     serializer_class = EstateSerializer
@@ -64,7 +75,6 @@ def sorted_assets_view(request, user_id, estate_id):
                    'to_be_donated': asset.to_be_donated,
                    'is_processed': asset.is_processed,
                    'belongs_to': asset.belongs_to.id if asset.belongs_to else asset.belongs_to,
-                   'comments': [c.id for c in asset.comments.all()],
                    'distribute_votes': [v.id for v in asset.distribute_votes.all()],
                    'throw_votes': [v.id for v in asset.throw_votes.all()],
                    'donate_votes': [v.id for v in asset.donate_votes.all()]
@@ -114,6 +124,20 @@ def reprioritize_view(request, user_id, asset_id, new_prio):
     return Response({'reprioritized': [user.name, asset.name]})
 
 
+@api_view(['GET'])
+def priority_view(request, user_id, asset_id):
+    """
+    Get priority of user for this asset.
+    user_id     ID of user
+    asset_id    ID of asset
+    """
+    user = User.objects.get(id=user_id)
+    asset = Asset.objects.get(id=asset_id)
+
+    priority = Wish.objects.get(user=user, asset=asset).priority
+    return Response({'priority': priority})
+
+
 def vote_view(request, user_id, asset_id, vote):
     """
     Set or change users vote for how to handle an asset.
@@ -144,6 +168,7 @@ def register_view(request, name, pw, age, email):
     user.save()
     return HttpResponse(status=204) # no content
 
+
 def approve_view(request, user_id, estate_id):
     """
     Approve an estate, i. e. vote for starting distribution
@@ -161,6 +186,20 @@ def approve_view(request, user_id, estate_id):
     estate.approve(user)
     estate.save()
     return HttpResponse(status=204) # no content
+
+
+@api_view(['GET'])
+def approved_view(request, user_id, estate_id):
+    """
+    Check if estate is approved by user
+    user_id    INT id for the user
+    estate_id  INT id for the estate
+    """
+    if Estate.objects.filter(id=estate_id).exists():
+        estate = Estate.objects.get(id=estate_id)
+    else:
+        return HttpResponse('Estate ID not valid', status=400) # bad request
+    return Response({'approved': estate.approvals.filter(id=user_id).exists()})
 
 
 @api_view(['GET'])
@@ -217,3 +256,33 @@ def asset_owner_view(request, asset_id):
         return Response(json_response)
     else:
         return HttpResponse('Asset has no owner', status=400) # bad request
+
+
+@api_view(['POST'])
+def post_comment_view(request, user, asset):
+    user = get_object_or_404(User, id=user)
+    asset = get_object_or_404(Asset, id=asset)
+
+    comment = Comment(submitter = user, 
+                      asset     = asset, 
+                      text      = request.body.decode('utf-8'))
+
+    comment.save()
+
+    return Response({"status": "ok"})
+
+@api_view(['DELETE'])
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    comment.is_deleted = True
+    comment.save()
+
+    return Response({"status": "ok"})
+
+@api_view(['PUT'])
+def edit_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    comment.text = request.body.decode('utf-8')
+    comment.save()
+
+    return Response({"status": "ok"})

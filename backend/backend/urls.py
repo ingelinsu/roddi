@@ -25,18 +25,25 @@ router.register(r'estates', views.EstateView, 'estate')
 router.register(r'comments', views.CommentView, 'comment')
 router.register(r'estate-assets', views.EstateAssetsView, 'estate-assets')
 router.register(r'user-estates', views.UserEstatesView, 'user-estates')
+router.register(r'user-comments', views.UserCommentsView, 'user-comments')
+router.register(r'asset-comments', views.AssetCommentsView, 'asset-comments')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),
     path('api/vote/<int:user_id>&<int:asset_id>&<str:vote>', views.vote_view, name='vote'),
-    path('api/reprioritize/<int:user_id>&<int:asset_id>&<new_prio>', views.reprioritize_view, name='reprioritize'),
+    path('api/reprioritize/<int:user_id>&<int:asset_id>&<int:new_prio>', views.reprioritize_view, name='reprioritize'),
+    path('api/priority/<int:user_id>&<int:asset_id>', views.priority_view, name='priority'),
     path('api/login/<str:email>&<str:password>', views.login_view, name='login'),
     path('api/register/<str:name>&<str:pw>&<int:age>&<str:email>', views.register_view, name='register'),
     path('api/approve/<int:user_id>&<int:estate_id>', views.approve_view, name='approve'),
+    path('api/approved/<int:user_id>&<int:estate_id>', views.approved_view, name='approved'),
     path('api/sorted-assets/<int:user_id>&<int:estate_id>', views.sorted_assets_view, name='sorted_assets'),
     path('api/relation-to-dead/<int:user_id>&<int:estate_id>', views.relation_to_dead_view, name='relation_to_dead'),
     path('api/asset-owner/<int:asset_id>', views.asset_owner_view, name='asset_owner'),
     path('api/general-stats/', views.general_stats_view, name='general_stats'),
-    path('api/user-stats/', views.user_stats_view, name='user_stats')
+    path('api/user-stats/', views.user_stats_view, name='user_stats'),
+    path('api/post-comment/<int:user>&<int:asset>', views.post_comment_view, name='post-comment'),
+    path('api/delete-comment/<int:comment_id>', views.delete_comment, name='delete-comment'),
+    path('api/edit-comment/<int:comment_id>', views.edit_comment, name='edit-comment')
 ]

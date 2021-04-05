@@ -13,12 +13,11 @@ code {
 }
 
 #hus {
-  
   height: 600px;
   margin-left: 0px;
 }
 
-#lorem {
+#description {
   margin: auto;
   width: 600px;
   font-size: 20px;
