@@ -85,7 +85,6 @@ class OwnerPage extends React.Component {
                     <ReactApexChart options={this.state.options} series={this.state.series} type="bar" height={300} width={700} />
                 </div>
                 
-                
             </Fragment>
         )
         
@@ -93,17 +92,4 @@ class OwnerPage extends React.Component {
     
 }
 
-
-
 export default OwnerPage;
-
-
-/*<Pie 
-                parent = {this.state.list.number_of_parents} 
-                sibling = {this.state.list.number_of_siblings} 
-                pibling = {this.state.list.number_of_piblings}
-                grandP = {this.state.list.number_of_grandparents}
-                children = {this.state.list.number_of_children}
-                grandC = {this.state.list.number_of_grandchildren}
-                others = {this.state.list.number_of_others}
-                />*/
