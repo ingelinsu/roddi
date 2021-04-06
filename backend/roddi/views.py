@@ -51,11 +51,6 @@ class CommentView(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
     queryset = Comment.objects.all()
 
-#class UserCommentsView(viecwsets.ModelViewSet):
-    # JSON view for all the estates associated with a user.
-#    serializer_class = UserCommentsSerializer
-#    queryset = User.objects.all()
-
 
 @api_view(['GET'])
 def sorted_assets_view(request, user_id, estate_id):
@@ -243,10 +238,9 @@ def commentSub_view(request, user_id, asset_id, text):
     asset_id    ID of asset
     text    the content of the comment being submitted
     """
-
-
     user = User.objects.get(id=user_id)
     asset = Asset.objects.get(id=asset_id)
+
     #Creating a comment through the comment method within asset based on API call
     comment = asset.comment(user, text)
 

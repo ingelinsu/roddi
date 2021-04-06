@@ -69,8 +69,21 @@ class CommentSerializer(serializers.ModelSerializer):
             'asset'
         )
 
+class CommentUserDataSerializer(serializers.ModelSerializer):
+    submitter = UserSerializer(many=False)
+
+    class Meta:
+        model = Comment
+        fields = (
+            'id',
+            'text',
+            'timestamp',
+            'submitter',
+            'is_deleted'
+        )
+
 class AssetCommentsSerializer(serializers.ModelSerializer):
-    comments = CommentSerializer(many=True)
+    comments = CommentUserDataSerializer(many=True)
     class Meta:
         model = Asset
         fields = (
