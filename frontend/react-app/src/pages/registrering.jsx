@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import "../components/Register_form.css"
+import "../components/Register.css"
 
 import axios from 'axios'
 import {withRouter} from "react-router-dom"
