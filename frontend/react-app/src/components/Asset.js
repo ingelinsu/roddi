@@ -16,10 +16,6 @@ class Asset extends Component {
 
     render() {
         return (
-            <Link to={{
-                pathname: "/comment",
-                state: {commentsKey: this.props.id}
-            }} className="commentLink">
             <div className="assetWrapper">
                 {/* <div className="priority">
                     <button type="button" onClick={(e) => this.onReprioritize("up")}>Up</button>
@@ -37,11 +33,18 @@ class Asset extends Component {
                     </div>
 
                     <div className="buttons">
-                        <Decisions assetId={this.props.id} />
+                        <div>
+                            <Decisions assetId={this.props.id} />
+                        </div>
+                        <div className="commentBtnWrapper">
+                            <Link to={{
+                                pathname: "/comment",
+                                state: {commentsKey: this.props.id}
+                                }} className="commentBtn">Kommentarer</Link>
+                        </div>
                     </div>
                 </div>
             </div>
-            </Link>
         );
 
     }

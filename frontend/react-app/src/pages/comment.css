@@ -10,7 +10,7 @@ body {
     overflow: auto;
 }
 
-button {
+.commentsWrapper button {
     border: none;
     color: white;
     padding: 5px 20px 5px 20px;
