@@ -7,7 +7,6 @@ import {
     Route,
     Switch,
     Link,
-    Redirect
   } from "react-router-dom";
 
 class Estate extends Component {

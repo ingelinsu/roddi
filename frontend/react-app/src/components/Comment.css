@@ -13,3 +13,19 @@ body {
     padding: 10px;
     border-radius: 20px;
 }
+
+.submitter{
+    font-size: larger;
+    color: rgb(0, 136, 57);
+}
+
+.commentText{
+    border-bottom: solid;
+    border-width: 2px;
+    padding-bottom: 10px;
+    border-color: lightgrey;
+}
+
+.timestamp{
+    color: rgb(172, 172, 172);
+}

@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { useHistory } from 'react-router'
+import {AuthContext} from "../context/auth"
 import axios from 'axios';
 
 import Comment from "../components/Comment"
-import {AuthContext} from "../context/auth"
 
 import "./comment.css"
 
@@ -22,27 +21,33 @@ class CommentPage extends Component {
         return (<Comment
             key={comment.id}
             id={comment.id}
-            submitter={comment.submitter}
+            submitter={comment.submitter.name}
             text={comment.text}
             timestamp={comment.timestamp}
         />)
-
     }
 
     componentDidMount() {
-        console.log("hei")
+
+        // API for getting all the comments for each asset
 
         axios
             .get("http://localhost:8000/api/asset-comments/" + this.props.location.state.commentsKey)
             .then(response => {
                 this.setState({
-                    commentsArray: response.data.comments.map(comment => this.commentToComponent(comment))//this.mapComments(response)
+                    commentsArray: response.data.comments.map(comment => this.commentToComponent(comment))
                 })
 
-            })//this.setState({ data: response.data.comments }))
+            })
             .catch(err => console.log(err))
     }
 
+
+    /**
+     * 
+     * @param commentText The text from the textfield input by user
+     * Function submits the comment via API with commentText the logged in users ID and current asset/comment page
+     */
     submitComment(commentText){
         const { authToken } = this.context
 
@@ -52,10 +57,6 @@ class CommentPage extends Component {
         .catch(err => console.log(err))
         window.location.reload();
 }
-/*
-    <button style={{ backgroundColor: "red" }} onClick={(e) => submitComment(document.getElementById("submitText").value)}>Kaste</button>
-                        <input type="textarea" className="inputComment" id="submitText"></input>
-*/
 
     render() {
         return (

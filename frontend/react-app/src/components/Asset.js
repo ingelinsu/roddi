@@ -1,12 +1,9 @@
 import React, { Component } from 'react';
+import { Link } from "react-router-dom";
 
 import './Asset.css'
 
 import Decisions from './Decisions.js'
-
-import {
-    Link
-  } from "react-router-dom";
 
 class Asset extends Component {
 
