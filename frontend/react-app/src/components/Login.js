@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
-import './Login.css'
+import "./Login.css";
 
-import { useAuth } from '../context/auth.js'
+import { useAuth } from "../context/auth.js";
 
-import axios from 'axios'
+import axios from "axios";
 import {
   BrowserRouter as Router,
   Route,
   Switch,
   Link,
-  Redirect
+  Redirect,
 } from "react-router-dom";
 
 function Login() {
@@ -21,8 +21,9 @@ function Login() {
   const { setAuthToken } = useAuth();
 
   function getLogin() {
-    axios.get("http://127.0.0.1:8000/api/login/" + email + "&" + password)
-      .then(result => {
+    axios
+      .get("http://127.0.0.1:8000/api/login/" + email + "&" + password)
+      .then((result) => {
         if (Object.keys(result.data)[0] == "id") {
           // ved innlogging
           setAuthToken(result.data.id);
@@ -31,8 +32,8 @@ function Login() {
           // ved feil passord
           setIsError(true);
         }
-
-      }).catch(e => {
+      })
+      .catch((e) => {
         // feil ved henting av data
         setIsError(true);
       });
@@ -47,7 +48,6 @@ function Login() {
 
   return (
     <div className="login-wrapper">
-
       <form>
         <h1>Logg inn</h1>
         <label>
@@ -55,7 +55,7 @@ function Login() {
           <input
             type="email"
             value={email}
-            onChange={e => {
+            onChange={(e) => {
               setEmail(e.target.value);
             }}
             placeholder="e-post"
@@ -67,21 +67,22 @@ function Login() {
           <input
             type="password"
             value={password}
-            onChange={e => {
+            onChange={(e) => {
               setPassword(e.target.value);
             }}
             placeholder="passord"
           />
         </label>
-        <div>
-          <button className="knapp" type="button" onClick={() => getLogin()}>Logg inn</button>
-          <button className="knapp" type="button" onClick={() => getRegister()}>Registrer deg</button>
+        <div className="loginButtons">
+          <button className="knapp" type="button" onClick={() => getLogin()}>
+            Logg inn
+          </button>
+          <Link to="/registrering">Registrer deg</Link>
         </div>
       </form>
-      { isError ? <h4>Feil brukernavn eller passord!</h4> : <span></span>}
+      {isError ? <h4>Feil brukernavn eller passord!</h4> : <span></span>}
     </div>
   );
 }
 
-
-export default Login
+export default Login;
