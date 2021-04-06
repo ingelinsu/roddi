@@ -42,13 +42,15 @@ function App() {
 
       <AuthContext.Provider value={{ authToken, setAuthToken: setToken }}>
         <Router>
-          <Navbar />
-          <Route exact path="/" component={Main} />
-          <Route exact path="/login" component={Login} />
-          <PrivateRoute exact path="/eiendeler" component={Assets} />
-          <PrivateRoute exact path="/dodsbo" component={Estate} />
-          <Route exact path="/eier" component={EierVindu} />
-          <Route exact path="/registrering" component={Register} />
+        <Navbar />
+            <div id="content">
+                <Route exact path="/" component={Main} />
+                <Route exact path="/login" component={Login} />
+                <PrivateRoute exact path="/eiendeler" component={Assets} />
+                <PrivateRoute exact path="/dodsbo" component={Estate} />
+                <Route exact path="/eier" component={EierVindu} />
+                <Route exact path="/registrering" component={Register} />
+            </div>
           <Footer />
         </Router>
       </AuthContext.Provider>
