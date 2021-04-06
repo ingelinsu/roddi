@@ -45,7 +45,7 @@ function Login() {
       <h4>Logg inn:</h4>
       <form>
         <label>
-          <p>Brukernavn</p>
+          <p>E-mail</p>
           <input 
           type="email" 
           value={email}

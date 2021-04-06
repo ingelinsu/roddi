@@ -38,10 +38,10 @@ class Asset extends Component {
 
     getAssetOwner() {
         axios
-            .get("http://localhost:8000/api/asset-owner" + this.props.assetId)
+            .get("http://localhost:8000/api/asset-owner/" + this.props.id)
             .then(response => {
                 // if the user has been assigned the asset, it will get the colour green, otherwise it will stay white
-                if (response.data.id.include(element => element === this.getAuthToken())) {
+                if (response.data.id === this.getAuthToken()) {
                     this.setState({ assetOwner: true })
                 }
             })
@@ -139,31 +139,33 @@ class Asset extends Component {
     }
 
     render() {
+        let colour = "assetWrapper"
+        if (this.state.assetOwner) {
+            colour += " assetColour"
+        }
         return (
-            <div className="assetWrapper">
-                <div className={this.state.assetOwner ? "assetColour" : null}> 
-                    <div className="priorityWrapper" style={this.props.isPriorityView ? { display: "inline-block" } : { display: "none" }}>
-                        <div className="priority">
-                            <button type="button" onClick={(e) => this.addPriority("up")} disabled={this.state.priority === 0}><FontAwesomeIcon icon={faCaretUp} size="3x" /></button>
-                            <div className="priorityNr">{this.state.priority}</div>
-                            <button type="button" onClick={(e) => this.addPriority("down")} disabled={this.state.priority === this.props.onGetMaxPriority() - 1}><FontAwesomeIcon icon={faCaretDown} size="3x" /></button>
-                        </div>
+            <div className={colour}>
+                <div className="priorityWrapper" style={this.props.isPriorityView ? { display: "inline-block" } : { display: "none" }}>
+                    <div className="priority">
+                        <button type="button" onClick={(e) => this.addPriority("up")} disabled={this.state.priority === 0}><FontAwesomeIcon icon={faCaretUp} size="3x" /></button>
+                        <div className="priorityNr">{this.state.priority}</div>
+                        <button type="button" onClick={(e) => this.addPriority("down")} disabled={this.state.priority === this.props.onGetMaxPriority() - 1}><FontAwesomeIcon icon={faCaretDown} size="3x" /></button>
+                    </div>
+                </div>
+
+                <div className="asset">
+                    <div className="assetImage">
+                        <img src={this.props.image_url} style={{ height: 150, width: 150 }} />
                     </div>
 
-                    <div className="asset">
-                        <div className="assetImage">
-                            <img src={this.props.image_url} style={{ height: 150, width: 150 }} />
-                        </div>
+                    <div className="assetContent">
+                        <p className="assetName">{this.props.name}</p>
+                        <p className="assetCategory">{this.props.category}</p>
+                        <p className="assetDescription">{this.props.description}</p>
+                    </div>
 
-                        <div className="assetContent">
-                            <p className="assetName">{this.props.name}</p>
-                            <p className="assetCategory">{this.props.category}</p>
-                            <p className="assetDescription">{this.props.description}</p>
-                        </div>
-
-                        <div className="buttons">
-                            <Decisions assetId={this.props.id} isPriorityView={this.props.isPriorityView} onDecision={this.handleDecision} />
-                        </div>
+                    <div className="buttons">
+                        <Decisions assetId={this.props.id} isPriorityView={this.props.isPriorityView} onDecision={this.handleDecision} />
                     </div>
                 </div>
             </div>

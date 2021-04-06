@@ -1,5 +1,5 @@
 .assetWrapper {
-  background-color: #ece9e9ec;
+  background-color: #b3b0b0ec;
   margin: 20px 20px;
   overflow: auto;
   height: 100%;
@@ -8,7 +8,7 @@
 }
 
 .assetColour {
-  background-color: #71c071da;
+  background-color: #8fad8fda;
 }
 
 .assetWrapper:first-of-type {
