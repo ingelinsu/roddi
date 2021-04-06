@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 
-import {useAuth} from '../context/auth.js'
+import './Login.css'
+
+import { useAuth } from '../context/auth.js'
 
 import axios from 'axios'
 import {
@@ -20,61 +22,62 @@ function Login() {
 
   function getLogin() {
     axios.get("http://127.0.0.1:8000/api/login/" + email + "&" + password)
-    .then(result => {
-      if (Object.keys(result.data)[0] == "id") {
-        // ved innlogging
-        setAuthToken(result.data.id);
-        setLoggedIn(true);
-      } else {
-        // ved feil passord
-        setIsError(true);
-      }
+      .then(result => {
+        if (Object.keys(result.data)[0] == "id") {
+          // ved innlogging
+          setAuthToken(result.data.id);
+          setLoggedIn(true);
+        } else {
+          // ved feil passord
+          setIsError(true);
+        }
 
-    }).catch(e => {
-      // feil ved henting av data
-      setIsError(true);
-    });
+      }).catch(e => {
+        // feil ved henting av data
+        setIsError(true);
+      });
   }
 
   if (isLoggedIn) {
     return <Redirect to="/dodsbo" />;
   }
 
-    return (
-      <div className="login-wrapper">
-      <h4>Logg inn:</h4>
+  return (
+    <div className="login-wrapper">
+
       <form>
+        <h1>Logg inn</h1>
         <label>
-          <p>Brukernavn</p>
-          <input 
-          type="email" 
-          value={email}
-          onChange={e => {
-            setEmail(e.target.value);
-          }}
-          placeholder="e-post"
+          <h2>Brukernavn</h2>
+          <input
+            type="email"
+            value={email}
+            onChange={e => {
+              setEmail(e.target.value);
+            }}
+            placeholder="e-post"
           />
         </label>
-      
+
         <label>
-          <p>Passord</p>
-          <input 
-          type="password" 
-          value={password}
-          onChange={e => {
-            setPassword(e.target.value);
-          }}
-          placeholder="passord"
+          <h2>Passord</h2>
+          <input
+            type="password"
+            value={password}
+            onChange={e => {
+              setPassword(e.target.value);
+            }}
+            placeholder="passord"
           />
         </label>
         <div>
-          <button id="knapp" type="button" onClick={() => getLogin()}>Logg inn</button>
+          <button className="knapp" type="button" onClick={() => getLogin()}>Logg inn</button>
         </div>
       </form>
-      { isError ? <h4>Feil brukernavn eller passord!</h4> : <span></span> }
+      { isError ? <h4>Feil brukernavn eller passord!</h4> : <span></span>}
     </div>
-      );
-  }
+  );
+}
 
 
-  export default Login
+export default Login

@@ -135,7 +135,7 @@ class Asset extends Component {
 
                 <div className="asset">
                     <div className="assetImage">
-                        <img src={this.props.image_url} style={{ height: 150, width: 150 }} />
+                        <img src={this.props.image_url} width="150" height="150" />
                     </div>
 
                     <div className="assetContent">
