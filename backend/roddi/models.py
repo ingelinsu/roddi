@@ -267,11 +267,11 @@ class Estate(models.Model):
 
 
     def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
         if self.send_reminder_email:
             self.alert_reminder()
             self.send_reminder_email = False
             self.save()
+        super(Estate, self).save(*args, **kwargs)
 
     def add_user(self, user: User):
         self.users.add(user)
@@ -295,6 +295,7 @@ class Estate(models.Model):
             self.full_distribution()
             self._alert_finished()
             self.is_complete = True
+        self.save()
 
     def full_distribution(self):
         """

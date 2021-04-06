@@ -12,6 +12,8 @@ import Main from "./pages/index.jsx";
 import Login from "./pages/login.jsx";
 import Assets from "./pages/eiendeler.jsx";
 import Estate from "./pages/dodsbo.jsx"
+import EierVindu from "./pages/eier.jsx"
+import Register from "./pages/registrering.jsx"
 
 import Navbar from "./components/Navbar.js";
 import Footer from "./components/Footer.js";
@@ -40,12 +42,14 @@ function App() {
 
       <AuthContext.Provider value={{ authToken, setAuthToken: setToken }}>
         <Router>
-            <Navbar />
+        <Navbar />
             <div id="content">
                 <Route exact path="/" component={Main} />
                 <Route exact path="/login" component={Login} />
                 <PrivateRoute exact path="/eiendeler" component={Assets} />
                 <PrivateRoute exact path="/dodsbo" component={Estate} />
+                <Route exact path="/eier" component={EierVindu} />
+                <Route exact path="/registrering" component={Register} />
             </div>
           <Footer />
         </Router>

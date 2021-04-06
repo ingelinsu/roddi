@@ -15,6 +15,10 @@
   margin-top: 0;
 }
 
+.assetContent {
+    min-height: 210px;
+}
+
 .assetName {
   margin: 0;
   font-size: x-large;
@@ -32,11 +36,16 @@
 }
 
 .assetImage {
-  height: 300px;
-  width: fit-content;
-  height: fit-content;
-  float: left;
-  margin-right: 20px;
+    height:300px;
+    width:fit-content;
+    height: fit-content;
+    float: left;
+    margin-right: 20px;
+}
+
+.assetImage img {
+    width: 150px;
+    height: auto;
 }
 
 .asset {

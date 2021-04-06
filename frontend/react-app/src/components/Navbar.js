@@ -42,9 +42,7 @@ function Navbar() {
 
         <ul className="menu">
           <li><Link to="/">Hjem</Link></li>
-          <li><Link to="/eiendeler">Eiendeler</Link></li>
           <li><Link to="/dodsbo">Dødsbo</Link></li>
-          <li><Link to="/">Kontakt</Link></li>
           <li style={logoutStyle}><a onClick={logout}>Logg ut</a></li>
         </ul>
       </div>
