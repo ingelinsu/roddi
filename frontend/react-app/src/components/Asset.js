@@ -18,20 +18,36 @@ class Asset extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            assetOwner: false,
             priority: 0
         }
         this.getAuthToken = this.getAuthToken.bind(this)
         this.getPriority = this.getPriority.bind(this)
         this.handleDecision = this.handleDecision.bind(this)
+        this.getAssetOwner = this.getAssetOwner.bind(this)
     }
 
     componentDidMount() {
+        this.getAssetOwner()
         this.getPriority()
     }
 
     componentDidUpdate() {
         this.getPriority()
     }
+
+    getAssetOwner() {
+        axios
+            .get("http://localhost:8000/api/asset-owner/" + this.props.id)
+            .then(response => {
+                // if the user has been assigned the asset, it will get the colour green, otherwise it will stay white
+                if (response.data.id === this.getAuthToken()) {
+                    this.setState({ assetOwner: true })
+                }
+            })
+            .catch(err => console.log(err))
+        }
+
 
     /**
      * Gets the latest priority of this asset from API
@@ -123,8 +139,12 @@ class Asset extends Component {
     }
 
     render() {
+        let colour = "assetWrapper"
+        if (this.state.assetOwner) {
+            colour += " assetColour"
+        }
         return (
-            <div className="assetWrapper">
+            <div className={colour}>
                 <div className="priorityWrapper" style={this.props.isPriorityView ? { display: "inline-block" } : { display: "none" }}>
                     <div className="priority">
                         <button type="button" onClick={(e) => this.addPriority("up")} disabled={this.state.priority === 0}><FontAwesomeIcon icon={faCaretUp} size="3x" /></button>

@@ -1,14 +1,18 @@
 .assetWrapper {
-    background-color: #afafaf;
-    margin: 20px 20px;
-    overflow: auto;
-    height: 100%;
-    padding:10px;
-    display: flex;
+  background-color: #b3b0b0ec;
+  margin: 20px 20px;
+  overflow: auto;
+  height: 100%;
+  padding: 10px;
+  display: flex;
+}
+
+.assetColour {
+  background-color: #8fad8fda;
 }
 
 .assetWrapper:first-of-type {
-    margin-top: 0;
+  margin-top: 0;
 }
 
 .assetContent {
@@ -16,19 +20,19 @@
 }
 
 .assetName {
-    margin: 0;
-    font-size: x-large;
-    font-weight: bold;
+  margin: 0;
+  font-size: x-large;
+  font-weight: bold;
 }
 
 .assetCategory {
-    margin: 2px;
-    font-size:medium;
-    font-weight: lighter;
+  margin: 2px;
+  font-size: medium;
+  font-weight: lighter;
 }
 
 .assetDescription {
-    min-height: 100px;
+  min-height: 100px;
 }
 
 .assetImage {
@@ -45,35 +49,35 @@
 }
 
 .asset {
-    display: inline-block;
+  display: inline-block;
 }
 
 .priorityWrapper {
-    display: inline-block;
-    height: 100px;
-    margin-right: 20px;
-    align-self: baseline;
+  display: inline-block;
+  height: 100px;
+  margin-right: 20px;
+  align-self: baseline;
 }
 
 .priority > button {
-    cursor: pointer;
-    border: none;
-    margin: 5px;
-    background-color: rgba(0,0,0,0);
+  cursor: pointer;
+  border: none;
+  margin: 5px;
+  background-color: rgba(0, 0, 0, 0);
 }
 
 .priority > button:hover {
-    background-color: rgba(255, 255, 255, 0.5);
+  background-color: rgba(255, 255, 255, 0.5);
 }
 
 .priority {
-    display:inline-flex;
-    flex-direction: column;
-    width: 50px;
-    margin: 0;
+  display: inline-flex;
+  flex-direction: column;
+  width: 50px;
+  margin: 0;
 }
 
 .priorityNr {
-    font-size: large;
-    align-self: center;
+  font-size: large;
+  align-self: center;
 }

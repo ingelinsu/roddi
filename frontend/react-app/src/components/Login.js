@@ -51,7 +51,7 @@ function Login() {
       <form>
         <h1>Logg inn</h1>
         <label>
-          <h2>Brukernavn</h2>
+          <h2>E-post</h2>
           <input
             type="email"
             value={email}
