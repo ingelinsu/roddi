@@ -41,6 +41,9 @@ function Login() {
   if (isLoggedIn) {
     return <Redirect to="/dodsbo" />;
   }
+  function getRegister() {
+    return <Redirect to="/registrering" />;
+  }
 
   return (
     <div className="login-wrapper">
@@ -72,6 +75,7 @@ function Login() {
         </label>
         <div>
           <button className="knapp" type="button" onClick={() => getLogin()}>Logg inn</button>
+          <button className="knapp" type="button" onClick={() => getRegister()}>Registrer deg</button>
         </div>
       </form>
       { isError ? <h4>Feil brukernavn eller passord!</h4> : <span></span>}
