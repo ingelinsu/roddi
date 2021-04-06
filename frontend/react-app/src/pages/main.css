@@ -1,0 +1,30 @@
+.description {
+  margin: auto;
+  width: 600px;
+  font-size: 20px;
+  text-align: center;
+  margin-bottom: 70px;
+}
+
+.tittel {
+  color: rgb(85, 141, 85);
+  font-size: 30px;
+  margin: auto;
+  text-align: center;
+  margin-top: 100px;
+  margin-bottom: 10px;
+}
+
+.mainContent {
+  display: flex;
+  justify-content: center;
+  width: 80%;
+  margin: 0 auto 10px auto;
+  height: 500px;
+}
+
+.mainImage {
+  background-image: url("../images/hus.png");
+  background-position: center;
+  width: 50%;
+}
