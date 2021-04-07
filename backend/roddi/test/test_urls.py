@@ -1,13 +1,13 @@
 from django.test import SimpleTestCase
 from django.urls import reverse, resolve
-from roddi.views import AssetView, EstateView, CommentView, UserView, login
+from roddi.views import AssetView, EstateView, CommentView, UserView, login_view
 
 #Tests the current URLS and that they are connected to the correct views
 
 class TestUrls(SimpleTestCase):
     def test_loginView_url_resolved(self):
         url = reverse('login', args=["email", "passord"])
-        self.assertEquals(resolve(url).func, login)
+        self.assertEquals(resolve(url).func, login_view)
 
     def test_api_asset_url_resolved(self):
         url = reverse('asset-list')
