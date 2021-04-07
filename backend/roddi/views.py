@@ -227,7 +227,6 @@ def commentSub_view(request, user_id, asset_id, text):
 
     user = User.objects.get(id=user_id)
     asset = Asset.objects.get(id=asset_id)
-    print(asset, user, text, "VIRUS")
     #Creating a comment through the comment method within asset based on API call
     comment = asset.comment(user, text)
 
