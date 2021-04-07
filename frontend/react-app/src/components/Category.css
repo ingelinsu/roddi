@@ -10,6 +10,13 @@
     padding: 8px 0;
     margin: 20px;
     height: 300px;
+    position: relative;
+  }
+
+  .sidenav .title {
+    padding: 6px 8px 10px 16px;
+    font-size: small;
+    font-weight: bold;
   }
   
   .sidenav a {
@@ -22,6 +29,7 @@
   
   .sidenav a:hover {
     color: #3f5546;
+    cursor: pointer;
   }
   
   .main {
@@ -33,4 +41,21 @@
   @media screen and (max-height: 450px) {
     .sidenav {padding-top: 15px;}
     .sidenav a {font-size: 18px;}
+  }
+
+  .sidenav a.active {
+    color: orange;
+  }
+
+  .sidenav a.clear {
+    color: rgb(29, 114, 226);
+    font-size: medium;
+    text-align: right;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+
+  .sidenav a.clear:hover {
+    color: rgb(91, 152, 233);
   }
