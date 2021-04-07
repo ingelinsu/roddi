@@ -47,6 +47,7 @@ class Comment(models.Model):
     # query name for Asset.comments..
 
     # Comment contents
+    #name = models.CharField(submitter.name)
     text = models.CharField(max_length=120, default='')
     timestamp = models.DateTimeField(auto_now_add=True)
 

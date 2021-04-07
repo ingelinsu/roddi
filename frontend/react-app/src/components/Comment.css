@@ -1,0 +1,31 @@
+body {
+    font-family: "Lato", sans-serif;
+  }
+
+.commentWrapper {
+    background-color: rgb(255, 255, 255);
+    padding: 10px;
+  }
+
+.commentContent {
+    box-shadow: 3px 3px 6px rgb(165, 165, 165);
+    background-color: rgb(245, 245, 245);
+    padding: 10px;
+    border-radius: 20px;
+}
+
+.submitter{
+    font-size: larger;
+    color: rgb(0, 136, 57);
+}
+
+.commentText{
+    border-bottom: solid;
+    border-width: 2px;
+    padding-bottom: 10px;
+    border-color: lightgrey;
+}
+
+.timestamp{
+    color: rgb(172, 172, 172);
+}

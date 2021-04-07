@@ -14,6 +14,7 @@ import Assets from "./pages/eiendeler.jsx";
 import Estate from "./pages/dodsbo.jsx"
 import EierVindu from "./pages/eier.jsx"
 import Register from "./pages/registrering.jsx"
+import Comment from "./pages/comment.jsx"
 
 import Navbar from "./components/Navbar.js";
 import Footer from "./components/Footer.js";
@@ -50,6 +51,7 @@ function App() {
                 <PrivateRoute exact path="/dodsbo" component={Estate} />
                 <Route exact path="/eier" component={EierVindu} />
                 <Route exact path="/registrering" component={Register} />
+                <PrivateRoute exact path="/comment" component={Comment} />
             </div>
           <Footer />
         </Router>

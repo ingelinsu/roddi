@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from "react-router-dom";
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretDown, faCaretUp } from '@fortawesome/free-solid-svg-icons';
@@ -157,7 +158,7 @@ class Asset extends Component {
                     <div className="assetImage">
                         <img src={this.props.image_url} width="150" height="150" />
                     </div>
-
+            
                     <div className="assetContent">
                         <p className="assetName">{this.props.name}</p>
                         <p className="assetCategory">{this.props.category}</p>
@@ -166,6 +167,12 @@ class Asset extends Component {
 
                     <div className="buttons">
                         <Decisions assetId={this.props.id} isPriorityView={this.props.isPriorityView} onDecision={this.handleDecision} />
+                        <div className="commentBtnWrapper">
+                            <Link to={{
+                                pathname: "/comment",
+                                state: {commentsKey: this.props.id}
+                                }} className="commentBtn">Kommentarer</Link>
+                        </div>
                     </div>
                 </div>
             </div>
