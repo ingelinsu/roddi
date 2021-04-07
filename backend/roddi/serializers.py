@@ -29,7 +29,6 @@ class EstateAssetsSerializer(serializers.ModelSerializer):
             'assets',
         )
 
-
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
@@ -70,6 +69,15 @@ class CommentSerializer(serializers.ModelSerializer):
             'asset'
         )
 
+class AssetCommentsSerializer(serializers.ModelSerializer):
+    comments = CommentSerializer(many=True)
+    class Meta:
+        model = Asset
+        fields = (
+            'id',
+            'comments',
+        )
+
 class UserEstatesSerializer(serializers.ModelSerializer):
     estate_set = EstateSerializer(many=True)
     class Meta:
@@ -79,14 +87,11 @@ class UserEstatesSerializer(serializers.ModelSerializer):
             'estate_set',
         )
 
-class UserCommentsSerializer(serializers.ModelSerializer):
-    comment_set = CommentSerializer(many=True)
+class UserComments(serializers.ModelSerializer):
+    submitter = UserSerializer(many=True)
     class Meta:
         model = User
-        fields = ('id', 'comment_set')
-
-class AssetCommentsSerializer(serializers.ModelSerializer):
-    comment_set = CommentSerializer(many=True)
-    class Meta:
-        model = Asset
-        fields = ('id', 'comment_set')
+        fields = (
+            'id',
+            'submitter',
+        )

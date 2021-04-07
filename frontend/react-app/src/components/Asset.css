@@ -77,3 +77,32 @@
     font-size: large;
     align-self: center;
 }
+
+.commentBtn > button {
+    border: none;
+    color: white;
+    padding: 5px 20px 5px 20px;
+    font-size: large;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.assetWrapper .commentBtn {
+    color: rgb(255, 255, 255);
+    padding-right: 10px;
+}
+
+.assetWrapper .commentBtnWrapper {
+    display: flex;
+    align-items: center;
+}
+
+.assetWrapper .commentBtn:hover {
+    color: lightgray;
+}
+
+.assetWrapper .buttons{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}

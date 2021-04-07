@@ -25,8 +25,8 @@ router.register(r'estates', views.EstateView, 'estate')
 router.register(r'comments', views.CommentView, 'comment')
 router.register(r'estate-assets', views.EstateAssetsView, 'estate-assets')
 router.register(r'user-estates', views.UserEstatesView, 'user-estates')
-router.register(r'user-comments', views.UserCommentsView, 'user-comments')
 router.register(r'asset-comments', views.AssetCommentsView, 'asset-comments')
+#router.register(r'user-comments', views.UserCommentsView, 'user-comments')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -42,8 +42,7 @@ urlpatterns = [
     path('api/relation-to-dead/<int:user_id>&<int:estate_id>', views.relation_to_dead_view, name='relation_to_dead'),
     path('api/asset-owner/<int:asset_id>', views.asset_owner_view, name='asset_owner'),
     path('api/general-stats/', views.general_stats_view, name='general_stats'),
-    path('api/user-stats/', views.user_stats_view, name='user_stats'),
-    path('api/post-comment/<int:user>&<int:asset>', views.post_comment_view, name='post-comment'),
-    path('api/delete-comment/<int:comment_id>', views.delete_comment, name='delete-comment'),
-    path('api/edit-comment/<int:comment_id>', views.edit_comment, name='edit-comment')
+    path('api/comment/<int:user_id>&<int:asset_id>&<str:text>', views.commentSub_view, name='commentSub'),
+    path('api/user-stats/', views.user_stats_view, name='user_stats')
+
 ]

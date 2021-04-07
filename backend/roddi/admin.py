@@ -24,7 +24,7 @@ class UserAdmin(admin.ModelAdmin):
     inlines = (UserRelationInline,)
 
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ('submitter', 'text', 'is_deleted')
+    list_display = ('submitter', 'text')
 
 admin.site.register(Estate, EstateAdmin)
 admin.site.register(Asset, AssetAdmin)

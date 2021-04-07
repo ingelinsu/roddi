@@ -1,0 +1,30 @@
+body {
+    font-family: "Lato", sans-serif;
+  }
+
+.commentsWrapper{
+    width: 1000px;
+    background-color: #ffffff;
+    margin: auto;
+    display: block;
+    overflow: auto;
+}
+
+.commentsWrapper button {
+    border: none;
+    color: white;
+    padding: 5px 20px 5px 20px;
+    font-size: large;
+    font-weight: bold;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+}
+
+.textField{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 20px;
+}

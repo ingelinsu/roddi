@@ -24,6 +24,11 @@ class EstateAssetsView(viewsets.ModelViewSet):
     serializer_class = EstateAssetsSerializer
     queryset = Estate.objects.all()
 
+class AssetCommentsView(viewsets.ModelViewSet):
+    # JSON view of all the comments in a given asset.
+    serializer_class = AssetCommentsSerializer
+    queryset = Asset.objects.all()
+
 class UserView(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
@@ -50,6 +55,11 @@ class EstateView(viewsets.ModelViewSet):
 class CommentView(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
     queryset = Comment.objects.all()
+
+#class UserCommentsView(viecwsets.ModelViewSet):
+    # JSON view for all the estates associated with a user.
+#    serializer_class = UserCommentsSerializer
+#    queryset = User.objects.all()
 
 
 @api_view(['GET'])
@@ -229,6 +239,28 @@ def general_stats_view(request):
     }
 
     return Response(json_response)
+
+@api_view(['GET'])
+def commentSub_view(request, user_id, asset_id, text):
+    """
+    Lets the logged in user make a comment on an asset.
+    user_id     ID of user
+    asset_id    ID of asset
+    text    the content of the comment being submitted
+    """
+
+
+    user = User.objects.get(id=user_id)
+    asset = Asset.objects.get(id=asset_id)
+    print(asset, user, text, "VIRUS")
+    #Creating a comment through the comment method within asset based on API call
+    comment = asset.comment(user, text)
+
+    asset.save()
+    user.save()
+    comment.save()
+    
+    return HttpResponse(status=204) # no content
 
 
 @api_view(['GET'])
