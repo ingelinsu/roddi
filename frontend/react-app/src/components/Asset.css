@@ -50,6 +50,7 @@
 
 .asset {
   display: inline-block;
+  width: 100%;
 }
 
 .priorityWrapper {
@@ -99,6 +100,7 @@
 .assetWrapper .commentBtnWrapper {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
 }
 
 .assetWrapper .commentBtn:hover {
