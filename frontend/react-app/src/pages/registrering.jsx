@@ -22,46 +22,49 @@ function Register({history}){
     }
           
     return (
+        <div className="registerContainer">
             <form>
-            <h3>Sign Up</h3>
+                <h3>Registreringsinformasjon</h3>
 
-            <div className="form-group">
-                <label>Name</label>
-                <input type="name" className="form-control" 
-                onChange={e => {setName(e.target.value);
-                }}
-                placeholder="Enter name" />
-            </div>
+                <div className="form-group">
+                    <label>Navn</label>
+                    <input type="name" className="form-control" 
+                    onChange={e => {setName(e.target.value);
+                    }}
+                    placeholder="Oppgi navn" />
+                </div>
 
-            <div className="form-group">
-                <label>Age</label>
-                <input type="age" className="form-control"
-                onChange={e => {setAge(e.target.value);
-                }}
-                    placeholder="Enter age" />
-            </div>
+                <div className="form-group">
+                    <label>Alder</label>
+                    <input type="age" className="form-control"
+                    onChange={e => {setAge(e.target.value);
+                    }}
+                        placeholder="Oppgi alder" />
+                </div>
 
-            <div className="form-group">
-                <label>Email</label>
-                <input type="email" className="form-control" 
-                onChange={e => {setEmail(e.target.value);
-                }}
-                placeholder="Enter email" />
-            </div>
+                <div className="form-group">
+                    <label>E-post</label>
+                    <input type="email" className="form-control" 
+                    onChange={e => {setEmail(e.target.value);
+                    }}
+                    placeholder="Oppgi e-post" />
+                </div>
 
-            <div className="form-group">
-                <label>Password</label>
-                <input type="password" className="form-control" 
-                onChange={e => {setPassword(e.target.value);
-                }}
-                placeholder="Enter password" />
-            </div>
+                <div className="form-group">
+                    <label>Passord</label>
+                    <input type="password" className="form-control" 
+                    onChange={e => {setPassword(e.target.value);
+                    }}
+                    placeholder="Oppgi passord" />
+                </div>
 
-            <button type="button" onClick={() => sendResponse()}
-                className="btn btn-primary btn-block">
-                    Sign Up</button>
+                <button type="button" onClick={() => sendResponse()}
+                    className="signUp">
+                        Registrer deg
+                </button>
                         
-        </form>
+            </form>
+    </div>
         );       
 }
 
