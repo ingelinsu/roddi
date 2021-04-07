@@ -41,7 +41,7 @@ class Comment(models.Model):
     # was left.
     id = models.IntegerField(primary_key=True, editable=False, default=_get_id)
     submitter = models.ForeignKey('User', on_delete=models.CASCADE)
-    asset  = models.ForeignKey('Asset', on_delete=models.CASCADE)
+    #asset  = models.ForeignKey('Asset', on_delete=models.CASCADE)
 
     # there is an asset field on here which is the reverse
     # query name for Asset.comments..
@@ -81,7 +81,7 @@ class Asset(models.Model):
     to_be_donated = models.BooleanField(default=False)
     is_processed = models.BooleanField(default=False)
     belongs_to = models.ForeignKey('User', null=True, blank=True, on_delete=models.SET_NULL)
-
+    comments = models.ManyToManyField(Comment, blank=True)
     distribute_votes = models.ManyToManyField('User', blank=True, related_name='distribute_votes')
     throw_votes = models.ManyToManyField('User', blank=True, related_name='throw_votes')
     donate_votes = models.ManyToManyField('User', blank=True, related_name='donate_votes')
@@ -92,8 +92,9 @@ class Asset(models.Model):
 
 
     def comment(self, user, text: str):
-        c = Comment(submitter=user, asset=self, text=text)
-        c.save()
+        self.comments.create(text=text, submitter=user)
+        #c = Comment(submitter=user, asset=self, text=text)
+        #c.save()
 
 
     def vote(self, user, vote):

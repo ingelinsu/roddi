@@ -38,11 +38,6 @@ class UserEstatesView(viewsets.ModelViewSet):
     serializer_class = UserEstatesSerializer
     queryset = User.objects.all()
 
-class AssetCommentsView(viewsets.ModelViewSet):
-    # JSON view for all the estates associated with a user.
-    serializer_class = AssetCommentsSerializer
-    queryset = Asset.objects.all()
-
 class EstateView(viewsets.ModelViewSet):
     serializer_class = EstateSerializer
     queryset = Estate.objects.all()
