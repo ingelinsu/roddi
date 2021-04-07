@@ -3,15 +3,14 @@ body {
   }
 
 .commentWrapper {
-    background-color: rgb(255, 255, 255);
     padding: 10px;
   }
 
 .commentContent {
     box-shadow: 3px 3px 6px rgb(165, 165, 165);
-    background-color: rgb(245, 245, 245);
     padding: 10px;
     border-radius: 20px;
+    background-color: white;
 }
 
 .submitter{
