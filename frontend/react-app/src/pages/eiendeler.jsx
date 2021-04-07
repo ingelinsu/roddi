@@ -18,6 +18,7 @@ class AssetsPage extends Component {
             assetsData: [],
             isPriorityChecked: false,
             isApproved: false,
+            isComplete: true,
             maxPriority: 0,
             categories: {},
             category: ""
@@ -35,16 +36,31 @@ class AssetsPage extends Component {
         this.getAssets()
         axios
             .get("http://localhost:8000/api/approved/" + this.getAuthToken() + "&" + this.props.location.state.assetsKey)
-            .then(response => { if (response.data.approved) { this.approve() } })
+            .then(response => { if (response.data.approved) { this.approve(false) } })
+        axios
+            .get("http://localhost:8000/api/estates/" + this.props.location.state.assetsKey)
+            .then(response => { if (response.data.is_complete) { this.complete() } })
     }
 
     /**
-     * Toggles priority mode in state
+     * Set isApproved to true
      */
-    approve() {
+    approve(reload=true) {
         axios.get("http://localhost:8000/api/approve/" + this.getAuthToken() + "&" + this.props.location.state.assetsKey);
         this.setState({
             isApproved: true
+        });
+        if (reload) {
+            window.location.reload();
+        }
+    }
+
+    /**
+     * set isComplete to true
+     */
+    complete() {
+        this.setState({
+            isComplete: true
         });
     }
 
@@ -220,12 +236,21 @@ class AssetsPage extends Component {
 
     render() {
 
-        console.log(this.state.category)
+        let topBarText;
+        if (!this.state.isApproved) {
+            topBarText = "Er du ferdig med fordeling og avstemning for dette dødsboet?";
+        }
+        else if (this.state.isComplete) {
+            topBarText = "Du har gjort deg ferdig med dette dødsboet. Du kan fortsatt endre valgene dine til resten har blitt ferdig.";
+        }
+        else {
+            topBarText = "Dette dødsboet er ferdig oppgjort. Du har fått tildelt eiendelene merket med grønt.";
+        }
 
         return (
             <div className="eiendelerWrapper">
                 <div className="topBar">
-                    <div className="topBarText">{this.state.isApproved ? "Du har gjort deg ferdig med dette dødsboet. Du kan fortsatt endre valgene dine til resten har blitt ferdig." : "Er du ferdig med fordeling og avstemning for dette dødsboet?"}</div>
+                    <div className="topBarText">{topBarText}</div>
                     {this.state.isApproved ? "" :
                         <div className="topBarButton finishedButton">
                             <label className="switch">
