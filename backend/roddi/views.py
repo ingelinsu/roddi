@@ -129,7 +129,11 @@ def priority_view(request, user_id, asset_id):
     user = User.objects.get(id=user_id)
     asset = Asset.objects.get(id=asset_id)
 
-    priority = Wish.objects.get(user=user, asset=asset).priority
+    if Wish.objects.filter(user=user, asset=asset):
+        priority = Wish.objects.get(user=user, asset=asset).priority
+    else:
+        return HttpResponse(status=204) # no content
+    
     return Response({'priority': priority})
 
 
@@ -241,7 +245,6 @@ def commentSub_view(request, user_id, asset_id, text):
 
     asset.save()
     user.save()
-    comment.save()
     
     return HttpResponse(status=204) # no content
 
@@ -270,7 +273,9 @@ def asset_owner_view(request, asset_id):
                 'name': asset.belongs_to.name
             }
             return Response(json_response)
-    return HttpResponse('Asset has no owner', status=400) # bad request
+    else:
+        HttpResponse('Asset id not valid', status=400) # bad request
+    return HttpResponse('Asset has no owner', status=204) # no content
 
 
 @api_view(['POST'])

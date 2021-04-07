@@ -1,9 +1,8 @@
 .description {
-  margin: auto;
   width: 600px;
+  margin: auto;
   font-size: 20px;
   text-align: center;
-  margin-bottom: 70px;
 }
 
 .tittel {
@@ -11,8 +10,6 @@
   font-size: 30px;
   margin: auto;
   text-align: center;
-  margin-top: 100px;
-  margin-bottom: 10px;
 }
 
 .mainContent {
@@ -27,4 +24,11 @@
   background-image: url("../images/hus.png");
   background-position: center;
   width: 50%;
+}
+
+.information {
+  background-color: #ededed;
+  padding: 80px 0 80px 0;
+  width: 80%;
+  margin:auto;
 }
