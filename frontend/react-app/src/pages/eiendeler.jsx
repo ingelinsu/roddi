@@ -241,10 +241,10 @@ class AssetsPage extends Component {
             topBarText = "Er du ferdig med fordeling og avstemning for dette dødsboet?";
         }
         else if (this.state.isComplete) {
-            topBarText = "Du har gjort deg ferdig med dette dødsboet. Du kan fortsatt endre valgene dine til resten har blitt ferdig.";
+            topBarText = "Dette dødsboet er ferdig oppgjort. Du har fått tildelt eiendelene merket med grønt.";
         }
         else {
-            topBarText = "Dette dødsboet er ferdig oppgjort. Du har fått tildelt eiendelene merket med grønt.";
+            topBarText = "Du har gjort deg ferdig med dette dødsboet. Du kan fortsatt endre valgene dine til resten har blitt ferdig.";
         }
 
         return (
