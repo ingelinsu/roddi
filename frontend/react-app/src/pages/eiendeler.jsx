@@ -36,10 +36,17 @@ class AssetsPage extends Component {
         this.getAssets()
         axios
             .get("http://localhost:8000/api/approved/" + this.getAuthToken() + "&" + this.props.location.state.assetsKey)
-            .then(response => { if (response.data.approved) { this.approve(false) } })
+            .then(response => { if (response.data.approved) { this.set_is_approved() } })
         axios
             .get("http://localhost:8000/api/estates/" + this.props.location.state.assetsKey)
             .then(response => { if (response.data.is_complete) { this.complete() } })
+    }
+
+
+    set_is_approved() {
+        this.setState({
+            isApproved: true
+        });
     }
 
     /**
@@ -47,9 +54,7 @@ class AssetsPage extends Component {
      */
     approve(reload=true) {
         axios.get("http://localhost:8000/api/approve/" + this.getAuthToken() + "&" + this.props.location.state.assetsKey);
-        this.setState({
-            isApproved: true
-        });
+        this.set_is_approved();
         if (reload) {
             window.location.reload();
         }
