@@ -41,12 +41,7 @@ conda config --add channels conda-forge
 conda config --add channels anaconda
 
 # Install all the libraries we need.
-conda install django
-conda install django-cors-headers
-conda install djangorestframework
-conda install django-extensions
-conda install cvxopt
-conda install numpy
+conda install django django-cors-headers djangorestframework django-extensions cvxopt numpy jupyter
 ```
 
 
@@ -86,8 +81,8 @@ python manage.py runserver
 2. Navigate to the `backend` folder using the `cd` and `dir` commands
 3. Run the following three commands. If any errors or issues appear, they must be solved before continuing.
 ```
-python manage.py makemigrations roddi
-python manage.py migrate roddi
+python manage.py makemigrations
+python manage.py migrate
 python manage.py runserver
 ```
 4. Open http://localhost:8000/ or http://localhost:8000/admin
