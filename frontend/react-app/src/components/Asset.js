@@ -47,7 +47,7 @@ class Asset extends Component {
                 }
             })
             .catch(err => console.log(err))
-        }
+    }
 
 
     /**
